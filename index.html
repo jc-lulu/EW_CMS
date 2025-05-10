@@ -523,7 +523,7 @@
           <div class="name">Admin User</div>
           <div class="role">Administrator</div>
         </div>
-        <img src="https://via.placeholder.com/45" alt="User Profile">
+        <img src="images/admin.jpg" alt="User Profile">
       </div>
     </div>
 
@@ -679,17 +679,17 @@
   </div>
 
   <script>
-    // Sample data for charts
+    // Sample data for charts - Updated for single household
     const dates = ['May 4', 'May 5', 'May 6', 'May 7', 'May 8', 'May 9', 'May 10'];
     const electricityData = {
-      daily: [25.7, 24.9, 27.6, 29.2, 26.8, 28.3, 28.3],
-      weekly: [168, 172, 165, 180, 176],
-      monthly: [510, 540, 490, 520, 530]
+      daily: [9.2, 8.7, 10.3, 9.8, 7.6, 8.9, 8.5],
+      weekly: [67, 59, 63, 61, 58],
+      monthly: [210, 195, 180, 202, 189]
     };
     const waterData = {
-      daily: [175, 182, 165, 178, 184, 192, 190],
-      weekly: [1240, 1180, 1280, 1350, 1320],
-      monthly: [3600, 3450, 3720, 3800, 3850]
+      daily: [385, 410, 352, 378, 390, 362, 380],
+      weekly: [2580, 2670, 2520, 2610, 2580],
+      monthly: [10800, 10500, 10650, 10700, 10550]
     };
 
     // Initialize charts
@@ -886,10 +886,10 @@
     // Simulate real-time updates
     setInterval(() => {
       // Slightly adjust the last values to simulate real-time changes
-      const newElectricityValue = electricityData.daily[6] + (Math.random() * 0.4 - 0.2);
+      const newElectricityValue = electricityData.daily[6] + (Math.random() * 0.2 - 0.1);
       electricityData.daily[6] = parseFloat(newElectricityValue.toFixed(1));
       
-      const newWaterValue = waterData.daily[6] + (Math.random() * 3 - 1.5);
+      const newWaterValue = waterData.daily[6] + (Math.random() * 5 - 2.5);
       waterData.daily[6] = parseFloat(newWaterValue.toFixed(0));
       
       // Update display values
