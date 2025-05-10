@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings | WE CMS</title>
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #2f3e46;
+      --secondary-color: #3d5a80;
+      --tertiary-color: #a8dadc;
+      --success-color: #2a9d8f;
+      --danger-color: #e63946;
+      --warning-color: #ee9b00;
+      --light-color: #f4f4f4;
+      --dark-color: #333;
+      --box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      color: var(--dark-color);
+    }
+    
+    .sidebar {
+      width: 250px;
+      background-color: var(--primary-color);
+      color: #fff;
+      height: 100vh;
+      padding: 20px;
+      position: fixed;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      transition: var(--transition);
+      z-index: 100;
+    }
+    
+    .sidebar h2 {
+      margin-bottom: 30px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .sidebar h2 i {
+      font-size: 1.5rem;
+      color: var(--tertiary-color);
+    }
+    
+    .sidebar a {
+      color: #fff;
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+      text-decoration: none;
+      padding: 12px 15px;
+      border-radius: 6px;
+      transition: var(--transition);
+      gap: 10px;
+    }
+    
+    .sidebar a i {
+      width: 22px;
+    }
+    
+    .sidebar a:hover, .sidebar a.active {
+      background-color: var(--secondary-color);
+      transform: translateX(5px);
+    }
+    
+    .main {
+      flex: 1;
+      padding: 25px;
+      margin-left: 250px;
+      transition: var(--transition);
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: var(--box-shadow);
+    }
+    
+    .header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .header h1 i {
+      font-size: 1.6rem;
+      color: var(--primary-color);
+    }
+    
+    .settings-container {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 25px;
+    }
+    
+    .settings-nav {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: var(--box-shadow);
+      height: fit-content;
+    }
+    
+    .settings-nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .settings-nav li {
+      margin-bottom: 10px;
+    }
+    
+    .settings-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 15px;
+      color: var(--dark-color);
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    
+    .settings-nav a i {
+      width: 22px;
+      text-align: center;
+      font-size: 1.1rem;
+      color: #6c757d;
+    }
+    
+    .settings-nav a:hover, .settings-nav a.active {
+      background-color: #f1faee;
+      color: var(--primary-color);
+      transform: translateX(5px);
+    }
+    
+    .settings-nav a.active i {
+      color: var(--primary-color);
+    }
+    
+    .settings-content {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: var(--box-shadow);
+    }
+    
+    .settings-section {
+      margin-bottom: 40px;
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .settings-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .settings-section h3 {
+      margin-top: 0;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+      color: var(--primary-color);
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .settings-section h3 i {
+      color: var(--secondary-color);
+      font-size: 1.4rem;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    .form-group .helper-text {
+      font-size: 0.85rem;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+    
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    
+    .form-group input:focus, 
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--tertiary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(168, 218, 220, 0.25);
+    }
+    
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .form-row .form-group {
+      flex: 1;
+    }
+    
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding: 5px 0;
+    }
+    
+    .toggle-label {
+      font-weight: 500;
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 26px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 26px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: var(--success-color);
+    }
+    
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--success-color);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    .form-footer {
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background-color: #e9ecef;
+      color: var(--dark-color);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #dee2e6;
+      transform: translateY(-2px);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #dc3545;
+      transform: translateY(-2px);
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #dee2e6;
+      color: var(--dark-color);
+    }
+    
+    .btn-outline:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-2px);
+    }
+    
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .pic-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      opacity: 0;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    
+    .profile-pic:hover .pic-overlay {
+      opacity: 1;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .alert {
+      padding: 12px 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .alert i {
+      font-size: 1.2rem;
+    }
+    
+    .alert-success {
+      background-color: #d1e7dd;
+      color: #0f5132;
+      border-left: 4px solid #198754;
+    }
+    
+    .alert-warning {
+      background-color: #fff3cd;
+      color: #664d03;
+      border-left: 4px solid #ffc107;
+    }
+    
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #842029;
+      border-left: 4px solid #dc3545;
+    }
+    
+    .alert-info {
+      background-color: #cff4fc;
+      color: #055160;
+      border-left: 4px solid #0dcaf0;
+    }
+    
+    .strength-meter {
+      height: 5px;
+      background-color: #e9ecef;
+      margin-top: 10px;
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .strength-meter-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: var(--transition);
+    }
+    
+    .strength-text {
+      font-size: 0.85rem;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    
+    .password-weak .strength-meter-fill {
+      width: 33%;
+      background-color: var(--danger-color);
+    }
+    
+    .password-medium .strength-meter-fill {
+      width: 66%;
+      background-color: var(--warning-color);
+    }
+    
+    .password-strong .strength-meter-fill {
+      width: 100%;
+      background-color: var(--success-color);
+    }
+    
+    .file-upload {
+      position: relative;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    
+    .file-upload input[type=file] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    
+    .delete-account-area {
+      padding: 20px;
+      border: 1px solid #f8d7da;
+      border-radius: 6px;
+      background-color: #fff5f6;
+    }
+    
+    .devices-list {
+      margin-top: 20px;
+    }
+    
+    .device-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .device-item:last-child {
+      border-bottom: none;
+    }
+    
+    .device-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .device-icon {
+      width: 40px;
+      height: 40px;
+      background-color: #f1faee;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--secondary-color);
+    }
+    
+    .device-details h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+    
+    .device-details p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #6c757d;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    
+    .badge-primary {
+      background-color: #cfe2ff;
+      color: #084298;
+    }
+    
+    .success-animation {
+      animation: checkmark 0.5s ease-in-out forwards;
+    }
+    
+    @keyframes checkmark {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    /* Tooltips */
+    .tooltip-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: rgba(47, 62, 70, 0.9);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.85rem;
+      font-weight: normal;
+    }
+    
+    .tooltip-wrapper:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    @media screen and (max-width: 1024px) {
+      .settings-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .settings-nav {
+        position: sticky;
+        top: 20px;
+      }
+      
+      .settings-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .settings-nav li {
+        margin-bottom: 0;
+      }
+    }
+    
+    @media screen and (max-width: 768px) {
+      .sidebar {
+        width: 70px;
+        padding: 15px 10px;
+      }
+      
+      .sidebar h2 span, .sidebar a span {
+        display: none;
+      }
+      
+      .sidebar a {
+        justify-content: center;
+      }
+      
+      .sidebar a i {
+        font-size: 1.2rem;
+      }
+      
+      .main {
+        margin-left: 70px;
+        padding: 15px;
+      }
+      
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .settings-nav a span {
+        display: none;
+      }
+      
+      .settings-nav a {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2><i class="fas fa-bolt"></i> <span>WE CMS</span></h2>
+    <a href="index.html"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+    <a href="history.html"><i class="fas fa-history"></i> <span>History</span></a>
+    <a href="tips.html"><i class="fas fa-lightbulb"></i> <span>Tips</span></a>
+    <a href="settings.html" class="active"><i class="fas fa-cog"></i> <span>Settings</span></a>
+    <a href="login.html" style="margin-top: auto;"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
+  
+  <div class="main">
+    <div class="header">
+      <h1><i class="fas fa-cog"></i> Settings</h1>
+    </div>
+
+    <div class="settings-container">
+      <div class="settings-nav">
+        <ul>
+          <li><a href="#profile" class="active" data-section="profile"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+          <li><a href="#security" data-section="security"><i class="fas fa-lock"></i> <span>Security</span></a></li>
+          <li><a href="#notifications" data-section="notifications"><i class="fas fa-bell"></i> <span>Notifications</span></a></li>
+          <li><a href="#units" data-section="units"><i class="fas fa-ruler-combined"></i> <span>Units & Measurements</span></a></li>
+          <li><a href="#data" data-section="data"><i class="fas fa-database"></i> <span>Data Management</span></a></li>
+        </ul>
+      </div>
+
+      <div class="settings-content">
+        <!-- Profile Section -->
+        <div id="profile" class="settings-section">
+          <div class="alert alert-success" id="profileSuccess" style="display: none;">
+            <i class="fas fa-check-circle"></i> Profile updated successfully!
+          </div>
+          
+          <h3><i class="fas fa-user-circle"></i> Profile Information</h3>
+          <div style="display: flex; align-items: center; margin-bottom: 25px;">
+            <div class="profile-pic">
+              <img src="https://via.placeholder.com/120" alt="Profile Picture">
+              <div class="pic-overlay">
+                <i class="fas fa-camera"></i>
+              </div>
+            </div>
+            <div style="margin-left: 20px;">
+              <button class="btn btn-outline file-upload">
+                <i class="fas fa-upload"></i> Upload Photo
+                <input type="file" accept="image/*">
+              </button>
+              <p class="helper-text" style="margin-top: 8px;">Recommended: 400x400px, max 1MB</p>
+            </div>
+          </div>
+          
+          <form id="profileForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" value="Admin">
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" value="User">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" value="admin@example.com">
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" value="+1 (555) 123-4567" placeholder="e.g., +1 (555) 123-4567">
+            </div>
+            <div class="form-group">
+              <label for="department">Department</label>
+              <input type="text" id="department" name="department" value="Facility Management" placeholder="e.g., Facility Management">
+            </div>
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select id="role" name="role">
+                <option value="admin" selected>Administrator</option>
+                <option value="manager">Manager</option>
+                <option value="user">Standard User</option>
+                <option value="viewer">Viewer</option>
+              </select>
+              <p class="helper-text">This defines what actions you can perform in the system</p>
+            </div>
+            <div class="form-footer">
+              <button type="button" class="btn btn-outline" id="cancelProfile">Cancel</button>
+              <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Security Section -->
+        <div id="security" class="settings-section hidden">
+          <div class="alert alert-success" id="passwordSuccess" style="display: none;">
+            <i class="fas fa-check-circle"></i> Password updated successfully!
+          </div>
+          
+          <h3><i class="fas fa-shield-alt"></i> Password Settings</h3>
+          <form id="securityForm">
+            <div class="form-group">
+              <label for="currentPassword">Current Password</label>
+              <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter your current password">
+            </div>
+            <div class="form-group">
+              <label for="newPassword">New Password</label>
+              <input type="password" id="newPassword" name="newPassword" placeholder="Enter your new password">
+              <div class="strength-meter">
+                <div class="strength-meter-fill"></div>
+              </div>
+              <div class="strength-text"></div>
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Confirm New Password</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your new password">
+            </div>
+            <div class="form-footer">
+              <button type="button" class="btn btn-outline" id="cancelSecurity">Cancel</button>
+              <button type="submit" class="btn btn-primary"><i class="fas fa-key"></i> Update Password</button>
+            </div>
+          </form>
+          
+          <h3 style="margin-top: 40px;"><i class="fas fa-user-shield"></i> Two-Factor Authentication</h3>
+          <div class="toggle-switch">
+            <span class="toggle-label">Enable Two-Factor Authentication</span>
+            <label class="switch">
+              <input type="checkbox" id="twoFactorToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p>Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in. When enabled, you'll need to provide a code from your mobile device when you log in.</p>
+          
+          <div id="twoFactorSetup" class="hidden" style="margin-top: 20px;">
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i> Scan the QR code below with your authentication app (Google Authenticator, Authy, etc.) to set up two-factor authentication.
+            </div>
+            <div style="text-align: center; margin: 20px 0;">
+              <img src="https://via.placeholder.com/200?text=QR+Code" alt="2FA QR Code" style="border: 1px solid #dee2e6; border-radius: 6px;">
+            </div>
+            <div class="form-group">
+              <label for="verificationCode">Verification Code</label>
+              <input type="text" id="verificationCode" name="verificationCode" placeholder="Enter the 6-digit code from your authenticator app">
+            </div>
+            <button class="btn btn-primary"><i class="fas fa-check-circle"></i> Verify and Enable</button>
+          </div>
+          
+          <h3 style="margin-top: 40px;"><i class="fas fa-laptop"></i> Active Sessions</h3>
+          <p>These are the devices that are currently logged in to your account. You can log out from any session that you don't recognize.</p>
+          
+          <div class="devices-list">
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">
+                  <i class="fas fa-laptop"></i>
+                </div>
+                <div class="device-details">
+                  <h4>Windows PC - Chrome</h4>
+                  <p>Last active: Just now <span class="badge badge-primary">Current</span></p>
+                </div>
+              </div>
+              <button class="btn btn-outline" disabled>Current Device</button>
+            </div>
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">
+                  <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="device-details">
+                  <h4>iPhone - Safari</h4>
+                  <p>Last active: 2 hours ago - New York, USA</p>
+                </div>
+              </div>
+              <button class="btn btn-outline">Log Out</button>
+            </div>
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">
+                  <i class="fas fa-tablet-alt"></i>
+                </div>
+                <div class="device-details">
+                  <h4>iPad - Safari</h4>
+                  <p>Last active: Yesterday - Chicago, USA</p>
+                </div>
+              </div>
+              <button class="btn btn-outline">Log Out</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div id="notifications" class="settings-section hidden">
+          <div class="alert alert-success" id="notificationsSuccess" style="display: none;">
+            <i class="fas fa-check-circle"></i> Notification preferences saved successfully!
+          </div>
+          
+          <h3><i class="fas fa-bell"></i> Notification Preferences</h3>
+          <p>Choose how and when you want to be notified about important events in your account.</p>
+          
+          <div style="margin-top: 20px;">
+            <h4 style="margin-bottom: 15px; font-size: 1.1rem;">Notification Channels</h4>
+            <div class="toggle-switch">
+              <span class="toggle-label">Email Notifications</span>
+              <label class="switch tooltip-wrapper">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+                <span class="tooltip-text">Send notifications to your email address</span>
+              </label>
+            </div>
+            <div class="toggle-switch">
+              <span class="toggle-label">SMS Notifications</span>
+              <label class="switch tooltip-wrapper">
+                <input type="checkbox">
+                <span class="slider"></span>
+                <span class="tooltip-text">Send notifications to your mobile phone via SMS</span>
+              </label>
+            </div>
+            <div class="toggle-switch">
+              <span class="toggle-label">Push Notifications</span>
+              <label class="switch tooltip-wrapper">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+                <span class="tooltip-text">Receive notifications in your web browser</span>
+              </label>
+            </div>
+          </div>
+          
+          <h4 style="margin: 30px 0 15px; font-size: 1.1rem;">Alert Preferences</h4>
+          <div class="toggle-switch">
+            <span class="toggle-label">High Consumption Alerts</span>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="form-group" style="padding-left: 20px; margin-top: 10px;">
+            <label for="alertThreshold">Alert Threshold (%)</label>
+            <input type="number" id="alertThreshold" name="alertThreshold" value="15" min="1" max="100">
+            <p class="helper-text">Notify me when consumption exceeds this percentage above the average.</p>
+          </div>
+          
+          <div class="toggle-switch">
+            <span class="toggle-label">Unusual Activity Alerts</span>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-switch">
+            <span class="toggle-label">System Maintenance Notifications</span>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <h4 style="margin: 30px 0 15px; font-size: 1.1rem;">Report Schedules</h4>
+          <div class="toggle-switch">
+            <span class="toggle-label">Weekly Summary Reports</span>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-switch">
+            <span class="toggle-label">Monthly Summary Reports</span>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-switch">
+            <span class="toggle-label">Quarterly Analysis Reports</span>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="form-footer">
+            <button type="button" class="btn btn-outline">Reset to Default</button>
+            <button class="btn btn-primary" id="saveNotifications"><i class="fas fa-save"></i> Save Notification Settings</button>
+          </div>
+        </div>
+
+        <!-- Units & Measurements Section -->
+        <div id="units" class="settings-section hidden">
+          <div class="alert alert-success" id="unitsSuccess" style="display: none;">
+            <i class="fas fa-check-circle"></i> Unit preferences saved successfully!
+          </div>
+          
+          <h3><i class="fas fa-ruler-combined"></i> Units & Measurement Preferences</h3>
+          <p>Choose your preferred units for displaying consumption data throughout the system.</p>
+          
+          <div class="form-group" style="margin-top: 20px;">
+            <label for="electricityUnit">Electricity Units</label>
+            <select id="electricityUnit" name="electricityUnit">
+              <option value="kwh" selected>Kilowatt-hour (kWh)</option>
+              <option value="wh">Watt-hour (Wh)</option>
+              <option value="mwh">Megawatt-hour (MWh)</option>
+              <option value="kj">Kilojoule (kJ)</option>
+            </select>
+            <p class="helper-text">This unit will be used to display your electricity consumption data.</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="waterUnit">Water Units</label>
+            <select id="waterUnit" name="waterUnit">
+              <option value="liters" selected>Liters (L)</option>
+              <option value="gallons">Gallons (gal)</option>
+              <option value="cubicMeters">Cubic Meters (m³)</option>
+              <option value="cubicFeet">Cubic Feet (ft³)</option>
+            </select>
+            <p class="helper-text">This unit will be used to display your water consumption data.</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="temperatureUnit">Temperature Units</label>
+            <select id="temperatureUnit" name="temperatureUnit">
+              <option value="celsius" selected>Celsius (°C)</option>
+              <option value="fahrenheit">Fahrenheit (°F)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="currencyUnit">Currency</label>
+            <select id="currencyUnit" name="currencyUnit">
+              <option value="php" selected>Philippine Peso (₱)</option>
+              <option value="usd">US Dollar ($)</option>
+              <option value="eur">Euro (€)</option>
+              <option value="gbp">British Pound (£)</option>
+              <option value="jpy">Japanese Yen (¥)</option>
+              <option value="cad">Canadian Dollar (C$)</option>
+              <option value="aud">Australian Dollar (A$)</option>
+              <option value="inr">Indian Rupee (₹)</option>
+            </select>
+            <p class="helper-text">This currency will be used for all cost calculations and reports.</p>
+          </div>
+          
+          <h4 style="margin: 30px 0 15px; font-size: 1.1rem;">Date & Time Format</h4>
+          <div class="form-group">
+            <label for="dateFormat">Date Format</label>
+            <select id="dateFormat" name="dateFormat">
+              <option value="mdy" selected>MM/DD/YYYY (US)</option>
+              <option value="dmy">DD/MM/YYYY (UK, EU)</option>
+              <option value="ymd">YYYY-MM-DD (ISO)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="timeFormat">Time Format</label>
+            <select id="timeFormat" name="timeFormat">
+              <option value="12h" selected>12-hour (AM/PM)</option>
+              <option value="24h">24-hour</option>
+            </select>
+          </div>
+          
+          <div class="form-footer">
+            <button type="button" class="btn btn-outline">Reset to Default</button>
+            <button class="btn btn-primary" id="saveUnits"><i class="fas fa-save"></i> Save Unit Preferences</button>
+          </div>
+        </div>
+
+        <!-- Data Management Section -->
+        <div id="data" class="settings-section hidden">
+          <div class="alert alert-success" id="dataSuccess" style="display: none;">
+            <i class="fas fa-check-circle"></i> Data settings saved successfully!
+          </div>
+          <div class="alert alert-warning" id="dataWarning" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i> Data export is in progress. This may take a few minutes.
+          </div>
+          
+          <h3><i class="fas fa-database"></i> Data Management</h3>
+          <p>Manage your consumption data storage, retention, and exports.</p>
+          
+          <div class="form-group" style="margin-top: 20px;">
+            <label for="dataRetention">Data Retention Period</label>
+            <select id="dataRetention" name="dataRetention">
+              <option value="6">6 months</option>
+              <option value="12" selected>1 year</option>
+              <option value="24">2 years</option>
+              <option value="36">3 years</option>
+              <option value="0">Indefinitely</option>
+            </select>
+            <p class="helper-text">Data older than the selected period will be automatically archived.</p>
+          </div>
+          
+          <h4 style="margin: 30px 0 15px; font-size: 1.1rem;">Data Export</h4>
+          <div class="form-group">
+            <label for="exportFormat">Export Format</label>
+            <select id="exportFormat" name="exportFormat">
+              <option value="csv" selected>CSV</option>
+              <option value="xlsx">Excel (XLSX)</option>
+              <option value="json">JSON</option>
+              <option value="pdf">PDF</option>
+            </select>
+            <p class="helper-text">Choose the format for exporting your consumption data.</p>
+          </div>
+          
+          <div class="form-row" style="margin-top: 20px;">
+            <div class="form-group">
+              <label for="exportStartDate">Export From</label>
+              <input type="date" id="exportStartDate" name="exportStartDate" value="2025-01-01">
+            </div>
+            <div class="form-group">
+              <label for="exportEndDate">Export To</label>
+              <input type="date" id="exportEndDate" name="exportEndDate" value="2025-05-10">
+            </div>
+          </div>
+          
+          <div style="margin-top: 20px;">
+            <button class="btn btn-primary" id="exportDataBtn"><i class="fas fa-file-export"></i> Export Data</button>
+            <button class="btn btn-secondary" style="margin-left: 10px;" id="downloadReportsBtn"><i class="fas fa-file-pdf"></i> Download Reports</button>
+          </div>
+          
+          <h4 style="margin: 30px 0 15px; font-size: 1.1rem;">Backup & Restore</h4>
+          <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="btn btn-primary"><i class="fas fa-cloud-download-alt"></i> Create Backup</button>
+            <div class="file-upload">
+              <button class="btn btn-secondary"><i class="fas fa-cloud-upload-alt"></i> Restore Backup</button>
+              <input type="file" accept=".backup,.zip">
+            </div>
+          </div>
+          <p class="helper-text">Last backup: May 9, 2025 at 11:45 PM</p>
+          
+          <h4 style="margin: 30px 0 15px; font-size: 1.1rem; color: var(--danger-color);">Danger Zone</h4>
+          <div class="delete-account-area">
+            <h5 style="margin-top: 0; margin-bottom: 10px; color: var(--danger-color);">Reset All Data</h5>
+            <p>This action is irreversible and will permanently delete all your consumption data.</p>
+            <button class="btn btn-danger" style="margin-top: 15px;" id="resetDataBtn"><i class="fas fa-exclamation-triangle"></i> Reset All Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Handle settings navigation
+    document.querySelectorAll('.settings-nav a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetSection = this.getAttribute('data-section');
+        
+        // Update active navigation link
+        document.querySelectorAll('.settings-nav a').forEach(a => a.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Show selected section, hide others
+        document.querySelectorAll('.settings-section').forEach(section => {
+          section.classList.add('hidden');
+        });
+        document.getElementById(targetSection).classList.remove('hidden');
+      });
+    });
+
+    // Handle form submissions
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Simulate saving (in a real app, this would save to the server)
+      const saveButton = this.querySelector('button[type="submit"]');
+      const originalText = saveButton.innerHTML;
+      
+      saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+      saveButton.disabled = true;
+      
+      setTimeout(() => {
+        saveButton.innerHTML = originalText;
+        saveButton.disabled = false;
+        
+        // Show success message
+        const successAlert = document.getElementById('profileSuccess');
+        successAlert.style.display = 'flex';
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          successAlert.style.display = 'none';
+        }, 3000);
+      }, 1000);
+    });
+
+    document.getElementById('securityForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const newPass = document.getElementById('newPassword').value;
+      const confirmPass = document.getElementById('confirmPassword').value;
+      
+      if (!newPass || !document.getElementById('currentPassword').value) {
+        alert('Please fill in all password fields.');
+        return;
+      }
+      
+      if (newPass !== confirmPass) {
+        alert('Passwords do not match. Please try again.');
+        return;
+      }
+      
+      // Simulate saving
+      const saveButton = this.querySelector('button[type="submit"]');
+      const originalText = saveButton.innerHTML;
+      
+      saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+      saveButton.disabled = true;
+      
+      setTimeout(() => {
+        saveButton.innerHTML = originalText;
+        saveButton.disabled = false;
+        
+        // Show success message
+        const successAlert = document.getElementById('passwordSuccess');
+        successAlert.style.display = 'flex';
+        
+        // Reset form
+        this.reset();
+        document.querySelector('.strength-meter-fill').style.width = '0%';
+        document.querySelector('.strength-text').textContent = '';
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          successAlert.style.display = 'none';
+        }, 3000);
+      }, 1000);
+    });
+
+    // Password strength meter
+    document.getElementById('newPassword').addEventListener('input', function() {
+      const password = this.value;
+      const strengthMeter = document.querySelector('.strength-meter-fill');
+      const strengthText = document.querySelector('.strength-text');
+      
+      if (password.length === 0) {
+        strengthMeter.style.width = '0%';
+        strengthText.textContent = '';
+        return;
+      }
+      
+      let strength = 0;
+      
+      // Add points for length
+      if (password.length > 7) strength += 1;
+      
+      // Add points for containing lowercase, uppercase, numbers, and special chars
+      if (/[a-z]/.test(password)) strength += 1;
+      if (/[A-Z]/.test(password)) strength += 1;
+      if (/[0-9]/.test(password)) strength += 1;
+      if (/[^a-zA-Z0-9]/.test(password)) strength += 1;
+      
+      // Set strength meter
+      if (strength <= 2) {
+        strengthMeter.style.width = '33%';
+        strengthMeter.style.backgroundColor = 'var(--danger-color)';
+        strengthText.textContent = 'Weak password';
+        strengthText.style.color = 'var(--danger-color)';
+      } else if (strength <= 4) {
+        strengthMeter.style.width = '66%';
+        strengthMeter.style.backgroundColor = 'var(--warning-color)';
+        strengthText.textContent = 'Medium strength password';
+        strengthText.style.color = 'var(--warning-color)';
+      } else {
+        strengthMeter.style.width = '100%';
+        strengthMeter.style.backgroundColor = 'var(--success-color)';
+        strengthText.textContent = 'Strong password';
+        strengthText.style.color = 'var(--success-color)';
+      }
+    });
+    
+    // Two-factor authentication toggle
+    document.getElementById('twoFactorToggle').addEventListener('change', function() {
+      const twoFactorSetup = document.getElementById('twoFactorSetup');
+      
+      if (this.checked) {
+        twoFactorSetup.classList.remove('hidden');
+      } else {
+        twoFactorSetup.classList.add('hidden');
+      }
+    });
+    
+    // Handle notification settings
+    document.getElementById('saveNotifications').addEventListener('click', function() {
+      // Simulate saving
+      const originalText = this.innerHTML;
+      
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+      this.disabled = true;
+      
+      setTimeout(() => {
+        this.innerHTML = originalText;
+        this.disabled = false;
+        
+        // Show success message
+        const successAlert = document.getElementById('notificationsSuccess');
+        successAlert.style.display = 'flex';
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          successAlert.style.display = 'none';
+        }, 3000);
+      }, 1000);
+    });
+    
+    // Handle units settings
+    document.getElementById('saveUnits').addEventListener('click', function() {
+      // Simulate saving
+      const originalText = this.innerHTML;
+      
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+      this.disabled = true;
+      
+      setTimeout(() => {
+        this.innerHTML = originalText;
+        this.disabled = false;
+        
+        // Show success message
+        const successAlert = document.getElementById('unitsSuccess');
+        successAlert.style.display = 'flex';
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          successAlert.style.display = 'none';
+        }, 3000);
+      }, 1000);
+    });
+    
+    // Handle data exports
+    document.getElementById('exportDataBtn').addEventListener('click', function() {
+      // Show warning message
+      const warningAlert = document.getElementById('dataWarning');
+      warningAlert.style.display = 'flex';
+      
+      // Simulate export process
+      const originalText = this.innerHTML;
+      
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+      this.disabled = true;
+      
+      setTimeout(() => {
+        this.innerHTML = originalText;
+        this.disabled = false;
+        
+        // Hide warning message
+        warningAlert.style.display = 'none';
+        
+        // Show success message
+        const successAlert = document.getElementById('dataSuccess');
+        successAlert.style.display = 'flex';
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          successAlert.style.display = 'none';
+        }, 3000);
+        
+        // In a real app, this would trigger a download
+        setTimeout(() => {
+          alert('Data export complete. Your download should start automatically.');
+        }, 500);
+      }, 2000);
+    });
+    
+    // Handle reports download
+    document.getElementById('downloadReportsBtn').addEventListener('click', function() {
+      // Simulate download process
+      const originalText = this.innerHTML;
+      
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
+      this.disabled = true;
+      
+      setTimeout(() => {
+        this.innerHTML = originalText;
+        this.disabled = false;
+        
+        // In a real app, this would trigger a download
+        alert('Reports are ready for download.');
+      }, 1500);
+    });
+
+    // Reset data confirmation
+    document.getElementById('resetDataBtn').addEventListener('click', function() {
+      if (confirm('WARNING: Are you absolutely sure you want to reset all data? This action CANNOT be undone.')) {
+        if (prompt('To confirm, please type "RESET" in all capitals') === 'RESET') {
+          // Simulate reset process
+          const originalText = this.innerHTML;
+          
+          this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resetting...';
+          this.disabled = true;
+          
+          setTimeout(() => {
+            this.innerHTML = originalText;
+            this.disabled = false;
+            
+            alert('All data has been reset successfully.');
+          }, 2000);
+        } else {
+          alert('Reset canceled: Confirmation text did not match.');
+        }
+      }
+    });
+    
+    // Cancel buttons
+    document.getElementById('cancelProfile').addEventListener('click', function() {
+      if (confirm('Discard unsaved changes?')) {
+        document.getElementById('profileForm').reset();
+      }
+    });
+    
+    document.getElementById('cancelSecurity').addEventListener('click', function() {
+      if (confirm('Discard unsaved changes?')) {
+        document.getElementById('securityForm').reset();
+        document.querySelector('.strength-meter-fill').style.width = '0%';
+        document.querySelector('.strength-text').textContent = '';
+      }
+    });
+    
+    // Profile picture upload
+    document.querySelector('.profile-pic').addEventListener('click', function() {
+      document.querySelector('.file-upload input[type=file]').click();
+    });
+    
+    document.querySelector('.file-upload input[type=file]').addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          document.querySelector('.profile-pic img').src = e.target.result;
+          
+          // Show success message
+          const successAlert = document.getElementById('profileSuccess');
+          successAlert.innerHTML = '<i class="fas fa-check-circle"></i> Profile picture updated successfully!';
+          successAlert.style.display = 'flex';
+          
+          // Hide success message after 3 seconds
+          setTimeout(() => {
+            successAlert.style.display = 'none';
+          }, 3000);
+        };
+        
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  </script>
+</body>
+</html>
