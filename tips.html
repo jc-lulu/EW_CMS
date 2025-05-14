@@ -1,941 +1,1002 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tips & Recommendations | WE CMS</title>
-  <!-- Add Font Awesome for icons -->
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
-  <link rel="stylesheet" href="fontawesome/css/all.min.css">
-  <style>
-    :root {
-      --primary-color: #2f3e46;
-      --secondary-color: #3d5a80;
-      --tertiary-color: #a8dadc;
-      --success-color: #2a9d8f;
-      --danger-color: #e63946;
-      --warning-color: #ee9b00;
-      --light-color: #f4f4f4;
-      --dark-color: #333;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f8f9fa;
-      display: flex;
-      color: var(--dark-color);
-    }
-    
-    .sidebar {
-      width: 250px;
-      background-color: var(--primary-color);
-      color: #fff;
-      height: 100vh;
-      padding: 20px;
-      position: fixed;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-      z-index: 100;
-    }
-    
-    .sidebar h2 {
-      margin-bottom: 30px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .sidebar h2 i {
-      font-size: 1.5rem;
-      color: var(--tertiary-color);
-    }
-    
-    .sidebar a {
-      color: #fff;
-      display: flex;
-      align-items: center;
-      margin: 15px 0;
-      text-decoration: none;
-      padding: 12px 15px;
-      border-radius: 6px;
-      transition: all 0.3s;
-      gap: 10px;
-    }
-    
-    .sidebar a i {
-      width: 22px;
-    }
-    
-    .sidebar a:hover, .sidebar a.active {
-      background-color: var(--secondary-color);
-      transform: translateX(5px);
-    }
-    
-    .main {
-      flex: 1;
-      padding: 25px;
-      margin-left: 250px;
-      transition: all 0.3s ease;
-    }
-    
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-      background: white;
-      padding: 15px 25px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    .header h1 {
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: var(--primary-color);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .header h1 i {
-      font-size: 1.6rem;
-      color: var(--warning-color);
-    }
-    
-    .search-box {
-      width: 100%;
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-    
-    .search-box input {
-      flex: 1;
-      padding: 14px 20px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: all 0.3s;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    
-    .search-box input:focus {
-      outline: none;
-      border-color: var(--tertiary-color);
-      box-shadow: 0 0 0 3px rgba(168, 218, 220, 0.25);
-    }
-    
-    .search-box button {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0 25px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s;
-    }
-    
-    .search-box button:hover {
-      background-color: var(--secondary-color);
-      transform: translateY(-2px);
-    }
-    
-    .search-box button i {
-      font-size: 1rem;
-    }
-    
-    .tabs {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 25px;
-      background: white;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      overflow-x: auto;
-    }
-    
-    .tab {
-      padding: 12px 20px;
-      background-color: #f8f9fa;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--dark-color);
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-    }
-    
-    .tab i {
-      font-size: 1rem;
-    }
-    
-    .tab:hover {
-      background-color: #e9ecef;
-    }
-    
-    .tab.active {
-      background-color: var(--primary-color);
-      color: white;
-    }
-    
-    .tip-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 25px;
-    }
-    
-    .tip-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-      transition: all 0.3s;
-      border: 1px solid #eee;
-      position: relative;
-    }
-    
-    .tip-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-    }
-    
-    .tip-card-img {
-      position: relative;
-      height: 200px;
-      overflow: hidden;
-    }
-    
-    .tip-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s;
-    }
-    
-    .tip-card:hover img {
-      transform: scale(1.05);
-    }
-    
-    .tip-card-content {
-      padding: 20px;
-    }
-    
-    .tip-tags {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    
-    .tag {
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    
-    .tag i {
-      font-size: 0.9rem;
-    }
-    
-    .tag-electricity {
-      background-color: #d5e5ff;
-      color: #457b9d;
-    }
-    
-    .tag-water {
-      background-color: #d8f3dc;
-      color: #2a9d8f;
-    }
-    
-    .tag-savings {
-      background-color: #fde6d2;
-      color: #e76f51;
-    }
-    
-    .tip-card h3 {
-      margin-top: 0;
-      font-size: 1.25rem;
-      color: var(--primary-color);
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-    
-    .tip-card p {
-      color: #6c757d;
-      margin-bottom: 20px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-    
-    .implement-btn {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      width: 100%;
-      justify-content: center;
-      transition: all 0.3s;
-    }
-    
-    .implement-btn:hover {
-      background-color: var(--secondary-color);
-      transform: translateY(-2px);
-    }
-    
-    .implement-btn i {
-      font-size: 1rem;
-    }
-    
-    .implement-btn.implemented {
-      background-color: var(--success-color);
-    }
-    
-    .implemented-badge {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background-color: var(--success-color);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      opacity: 0;
-      transform: translateX(20px);
-      transition: all 0.3s;
-    }
-    
-    .tip-card.is-implemented .implemented-badge {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    
-    .savings-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 15px;
-    }
-    
-    .savings-icon {
-      background-color: #fde6d2;
-      color: #e76f51;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .savings-icon i {
-      font-size: 1.2rem;
-    }
-    
-    .savings-text {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-    
-    .savings-amount {
-      color: #e76f51;
-    }
-    
-    .tip-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-top: 15px;
-    }
-    
-    .share-btn {
-      background-color: #e9ecef;
-      color: var(--dark-color);
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .share-btn:hover {
-      background-color: var(--tertiary-color);
-      transform: translateY(-2px);
-    }
-    
-    .no-results {
-      text-align: center;
-      padding: 40px 0;
-      width: 100%;
-      grid-column: 1 / -1;
-    }
-    
-    .no-results i {
-      font-size: 3rem;
-      color: #dee2e6;
-      margin-bottom: 15px;
-    }
-    
-    .no-results h3 {
-      color: var(--dark-color);
-      margin-bottom: 10px;
-    }
-    
-    .no-results p {
-      color: #6c757d;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    
-    @media screen and (max-width: 1024px) {
-      .tip-container {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tips & Recommendations | WE CMS</title>
+    <!-- Add Font Awesome for icons -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <link rel="stylesheet" href="fontawesome/css/all.min.css" />
+    <style>
+      :root {
+        --primary-color: #2f3e46;
+        --secondary-color: #3d5a80;
+        --tertiary-color: #a8dadc;
+        --success-color: #2a9d8f;
+        --danger-color: #e63946;
+        --warning-color: #ee9b00;
+        --light-color: #f4f4f4;
+        --dark-color: #333;
       }
-    }
-    
-    @media screen and (max-width: 768px) {
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        display: flex;
+        color: var(--dark-color);
+      }
+
       .sidebar {
-        width: 70px;
-        padding: 15px 10px;
+        width: 250px;
+        background-color: var(--primary-color);
+        color: #fff;
+        height: 100vh;
+        padding: 20px;
+        position: fixed;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        z-index: 100;
       }
-      
-      .sidebar h2 span, .sidebar a span {
-        display: none;
+
+      .sidebar h2 {
+        margin-bottom: 30px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
-      
+
+      .sidebar h2 i {
+        font-size: 1.5rem;
+        color: var(--tertiary-color);
+      }
+
       .sidebar a {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        text-decoration: none;
+        padding: 12px 15px;
+        border-radius: 6px;
+        transition: all 0.3s;
+        gap: 10px;
+      }
+
+      .sidebar a i {
+        width: 22px;
+      }
+
+      .sidebar a:hover,
+      .sidebar a.active {
+        background-color: var(--secondary-color);
+        transform: translateX(5px);
+      }
+
+      .main {
+        flex: 1;
+        padding: 25px;
+        margin-left: 250px;
+        transition: all 0.3s ease;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        background: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header h1 i {
+        font-size: 1.6rem;
+        color: var(--warning-color);
+      }
+
+      .search-box {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+      }
+
+      .search-box input {
+        flex: 1;
+        padding: 14px 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+
+      .search-box input:focus {
+        outline: none;
+        border-color: var(--tertiary-color);
+        box-shadow: 0 0 0 3px rgba(168, 218, 220, 0.25);
+      }
+
+      .search-box button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+      }
+
+      .search-box button:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+      }
+
+      .search-box button i {
+        font-size: 1rem;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 25px;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        overflow-x: auto;
+      }
+
+      .tab {
+        padding: 12px 20px;
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--dark-color);
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+      }
+
+      .tab i {
+        font-size: 1rem;
+      }
+
+      .tab:hover {
+        background-color: #e9ecef;
+      }
+
+      .tab.active {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .tip-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+      }
+
+      .tip-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s;
+        border: 1px solid #eee;
+        position: relative;
+      }
+
+      .tip-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .tip-card-img {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+      }
+
+      .tip-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+
+      .tip-card:hover img {
+        transform: scale(1.05);
+      }
+
+      .tip-card-content {
+        padding: 20px;
+      }
+
+      .tip-tags {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .tag i {
+        font-size: 0.9rem;
+      }
+
+      .tag-electricity {
+        background-color: #d5e5ff;
+        color: #457b9d;
+      }
+
+      .tag-water {
+        background-color: #d8f3dc;
+        color: #2a9d8f;
+      }
+
+      .tag-savings {
+        background-color: #fde6d2;
+        color: #e76f51;
+      }
+
+      .tip-card h3 {
+        margin-top: 0;
+        font-size: 1.25rem;
+        color: var(--primary-color);
+        margin-bottom: 12px;
+        font-weight: 600;
+      }
+
+      .tip-card p {
+        color: #6c757d;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .implement-btn {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        width: 100%;
+        justify-content: center;
+        transition: all 0.3s;
+      }
+
+      .implement-btn:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+      }
+
+      .implement-btn i {
+        font-size: 1rem;
+      }
+
+      .implement-btn.implemented {
+        background-color: var(--success-color);
+      }
+
+      .implemented-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: var(--success-color);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transform: translateX(20px);
+        transition: all 0.3s;
+      }
+
+      .tip-card.is-implemented .implemented-badge {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .savings-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .savings-icon {
+        background-color: #fde6d2;
+        color: #e76f51;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
         justify-content: center;
       }
-      
-      .sidebar a i {
+
+      .savings-icon i {
         font-size: 1.2rem;
       }
-      
-      .main {
-        margin-left: 70px;
+
+      .savings-text {
+        font-size: 0.95rem;
+        font-weight: 600;
       }
-      
-      .tip-container {
-        grid-template-columns: 1fr;
+
+      .savings-amount {
+        color: #e76f51;
       }
-    }
-    
-    /* Dark mode styles */
-    .dark-mode {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: var(--primary-color);
-      color: white;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-      z-index: 100;
-      transition: all 0.3s;
-    }
-    
-    .dark-mode:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-  </style>
-</head>
-<body>
-  <div class="sidebar">
-    <h2><i class="fas fa-bolt"></i> <span>WE CMS</span></h2>
-    <a href="index.html"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
-    <a href="history.html"><i class="fas fa-history"></i> <span>History</span></a>
-    <a href="tips.html" class="active"><i class="fas fa-lightbulb"></i> <span>Tips</span></a>
-    <a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a>
-    <a href="login.html" style="margin-top: auto;"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
-  </div>
-  <div class="main">
-    <div class="header">
-      <h1><i class="fas fa-lightbulb"></i> Tips & Recommendations</h1>
+
+      .tip-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 15px;
+      }
+
+      .share-btn {
+        background-color: #e9ecef;
+        color: var(--dark-color);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .share-btn:hover {
+        background-color: var(--tertiary-color);
+        transform: translateY(-2px);
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 40px 0;
+        width: 100%;
+        grid-column: 1 / -1;
+      }
+
+      .no-results i {
+        font-size: 3rem;
+        color: #dee2e6;
+        margin-bottom: 15px;
+      }
+
+      .no-results h3 {
+        color: var(--dark-color);
+        margin-bottom: 10px;
+      }
+
+      .no-results p {
+        color: #6c757d;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      @media screen and (max-width: 1024px) {
+        .tip-container {
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .sidebar {
+          width: 70px;
+          padding: 15px 10px;
+        }
+
+        .sidebar h2 span,
+        .sidebar a span {
+          display: none;
+        }
+
+        .sidebar a {
+          justify-content: center;
+        }
+
+        .sidebar a i {
+          font-size: 1.2rem;
+        }
+
+        .main {
+          margin-left: 70px;
+        }
+
+        .tip-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Dark mode styles */
+      .dark-mode {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        z-index: 100;
+        transition: all 0.3s;
+      }
+
+      .dark-mode:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2><i class="fas fa-bolt"></i> <span>WE CMS</span></h2>
+      <a href="index.html"
+        ><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a
+      >
+      <a href="history.html"
+        ><i class="fas fa-history"></i> <span>History</span></a
+      >
+      <a href="tips.html" class="active"
+        ><i class="fas fa-lightbulb"></i> <span>Tips</span></a
+      >
+      <a href="settings.html"
+        ><i class="fas fa-cog"></i> <span>Settings</span></a
+      >
+      <a href="login.html" style="margin-top: auto"
+        ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+      >
+    </div>
+    <div class="main">
+      <div class="header">
+        <h1><i class="fas fa-lightbulb"></i> Tips & Recommendations</h1>
+      </div>
+
+      <div class="search-box">
+        <input type="text" placeholder="Search for tips..." />
+        <button><i class="fas fa-search"></i> Search</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-category="all">
+          <i class="fas fa-border-all"></i> All Tips
+        </button>
+        <button class="tab" data-category="electricity">
+          <i class="fas fa-bolt"></i> Electricity
+        </button>
+        <button class="tab" data-category="water">
+          <i class="fas fa-tint"></i> Water
+        </button>
+        <!-- <button class="tab" data-category="implemented">
+          <i class="fas fa-check-circle"></i> Implemented
+        </button> -->
+        <button class="tab" data-category="savings">
+          <i class="fas fa-piggy-bank"></i> Highest Savings
+        </button>
+      </div>
+
+      <div class="tip-container">
+        <!-- Electricity Tips -->
+        <div class="tip-card" data-categories="electricity">
+          <div class="tip-card-img">
+            <img src="images/image1.avif" alt="LED Lights" />
+            <div class="tip-tags">
+              <span class="tag tag-electricity"
+                ><i class="fas fa-bolt"></i> Electricity</span
+              >
+              <span class="tag tag-savings"
+                ><i class="fas fa-piggy-bank"></i> Save ~₱80/year</span
+              >
+            </div>
+            <div class="implemented-badge">
+              <i class="fas fa-check-circle"></i> Implemented
+            </div>
+          </div>
+          <div class="tip-card-content">
+            <h3>Switch to LED Lighting</h3>
+            <p>
+              LED bulbs use up to 75% less energy than incandescent lighting and
+              can last 25 times longer. Replace your most frequently used bulbs
+              first for maximum savings.
+            </p>
+            <div class="savings-info">
+              <div class="savings-icon">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="savings-text">
+                Potential savings:
+                <span class="savings-amount">₱80 per year</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-card" data-categories="electricity">
+          <div class="tip-card-img">
+            <img src="images/image2.jpg" alt="Unplugged" />
+            <div class="tip-tags">
+              <span class="tag tag-electricity"
+                ><i class="fas fa-bolt"></i> Electricity</span
+              >
+              <span class="tag tag-savings"
+                ><i class="fas fa-piggy-bank"></i> Save ~₱60/year</span
+              >
+            </div>
+            <div class="implemented-badge">
+              <i class="fas fa-check-circle"></i> Implemented
+            </div>
+          </div>
+          <div class="tip-card-content">
+            <h3>Unplug Electronics When Not in Use</h3>
+            <p>
+              Even when turned off, many electronics use standby power.
+              Unplugging them or using power strips could save up to 10% on
+              electricity. Focus on TVs, computers, and gaming consoles.
+            </p>
+            <div class="savings-info">
+              <div class="savings-icon">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="savings-text">
+                Potential savings:
+                <span class="savings-amount">₱60 per year</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-card" data-categories="electricity">
+          <div class="tip-card-img">
+            <img src="images/Image3.avif" alt="Air Conditioner" />
+            <div class="tip-tags">
+              <span class="tag tag-electricity"
+                ><i class="fas fa-bolt"></i> Electricity</span
+              >
+              <span class="tag tag-savings"
+                ><i class="fas fa-piggy-bank"></i> Save ~₱105/year</span
+              >
+            </div>
+            <div class="implemented-badge">
+              <i class="fas fa-check-circle"></i> Implemented
+            </div>
+          </div>
+          <div class="tip-card-content">
+            <h3>Optimize Air Conditioning Temperature</h3>
+            <p>
+              Set your thermostat to 78°F (26°C) in summer and 68°F (20°C) in
+              winter for optimal energy savings. Each degree adjustment can save
+              about 3-5% on energy costs.
+            </p>
+            <div class="savings-info">
+              <div class="savings-icon">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="savings-text">
+                Potential savings:
+                <span class="savings-amount">₱105 per year</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-card" data-categories="electricity">
+          <div class="tip-card-img">
+            <img src="images/image7.jpg" alt="Natural Light" />
+            <div class="tip-tags">
+              <span class="tag tag-electricity"
+                ><i class="fas fa-bolt"></i> Electricity</span
+              >
+              <span class="tag tag-savings"
+                ><i class="fas fa-piggy-bank"></i> Save ~₱40/year</span
+              >
+            </div>
+            <div class="implemented-badge">
+              <i class="fas fa-check-circle"></i> Implemented
+            </div>
+          </div>
+          <div class="tip-card-content">
+            <h3>Use Natural Light</h3>
+            <p>
+              Open curtains and blinds during the day instead of turning on
+              lights. Position desks and seating near windows to maximize
+              natural daylight and reduce the need for artificial lighting.
+            </p>
+            <div class="savings-info">
+              <div class="savings-icon">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="savings-text">
+                Potential savings:
+                <span class="savings-amount">₱40 per year</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Water Tips -->
+        <div class="tip-card" data-categories="water">
+          <div class="tip-card-img">
+            <img src="images/image5.webp" alt="Leaky Faucet" />
+            <div class="tip-tags">
+              <span class="tag tag-water"
+                ><i class="fas fa-tint"></i> Water</span
+              >
+              <span class="tag tag-savings"
+                ><i class="fas fa-piggy-bank"></i> Save ~₱70/year</span
+              >
+            </div>
+            <div class="implemented-badge">
+              <i class="fas fa-check-circle"></i> Implemented
+            </div>
+          </div>
+          <div class="tip-card-content">
+            <h3>Fix Leaking Faucets</h3>
+            <p>
+              A faucet that drips at the rate of one drip per second can waste
+              more than 3,000 gallons per year. Checking and fixing leaks
+              promptly can lead to significant water savings.
+            </p>
+            <div class="savings-info">
+              <div class="savings-icon">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="savings-text">
+                Potential savings:
+                <span class="savings-amount">₱70 per year</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-card" data-categories="water">
+          <div class="tip-card-img">
+            <img src="images/image8.avif" alt="Low Flow Shower Head" />
+            <div class="tip-tags">
+              <span class="tag tag-water"
+                ><i class="fas fa-tint"></i> Water</span
+              >
+              <span class="tag tag-savings"
+                ><i class="fas fa-piggy-bank"></i> Save ~₱95/year</span
+              >
+            </div>
+            <div class="implemented-badge">
+              <i class="fas fa-check-circle"></i> Implemented
+            </div>
+          </div>
+          <div class="tip-card-content">
+            <h3>Install Low-Flow Fixtures</h3>
+            <p>
+              Low-flow showerheads and faucet aerators can reduce water use by
+              30-50% without affecting performance. Modern fixtures provide
+              strong water pressure while using much less water.
+            </p>
+            <div class="savings-info">
+              <div class="savings-icon">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="savings-text">
+                Potential savings:
+                <span class="savings-amount">₱95 per year</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-card" data-categories="water">
+          <div class="tip-card-img">
+            <img src="images/image6.jpg" alt="Washing Machine" />
+            <div class="tip-tags">
+              <span class="tag tag-water"
+                ><i class="fas fa-tint"></i> Water</span
+              >
+              <span class="tag tag-savings"
+                ><i class="fas fa-piggy-bank"></i> Save ~₱65/year</span
+              >
+            </div>
+            <div class="implemented-badge">
+              <i class="fas fa-check-circle"></i> Implemented
+            </div>
+          </div>
+          <div class="tip-card-content">
+            <h3>Full Loads Only</h3>
+            <p>
+              Only run dishwashers and washing machines when they're full to
+              maximize water and energy efficiency. Running half-loads wastes
+              water, electricity, and detergent.
+            </p>
+            <div class="savings-info">
+              <div class="savings-icon">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="savings-text">
+                Potential savings:
+                <span class="savings-amount">₱65 per year</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-card" data-categories="water">
+          <div class="tip-card-img">
+            <img src="images/image9.jfif" alt="Water Plants" />
+            <div class="tip-tags">
+              <span class="tag tag-water"
+                ><i class="fas fa-tint"></i> Water</span
+              >
+              <span class="tag tag-savings"
+                ><i class="fas fa-piggy-bank"></i> Save ~₱55/year</span
+              >
+            </div>
+            <div class="implemented-badge">
+              <i class="fas fa-check-circle"></i> Implemented
+            </div>
+          </div>
+          <div class="tip-card-content">
+            <h3>Water-Efficient Gardening</h3>
+            <p>
+              Water plants early morning or evening to reduce evaporation. Use
+              drip irrigation instead of sprinklers and consider collecting
+              rainwater for garden use to maximize water savings.
+            </p>
+            <div class="savings-info">
+              <div class="savings-icon">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="savings-text">
+                Potential savings:
+                <span class="savings-amount">₱55 per year</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty state for no search results -->
+        <div class="no-results" style="display: none">
+          <i class="fas fa-search"></i>
+          <h3>No matching tips found</h3>
+          <p>Try adjusting your search term or browse all tips</p>
+        </div>
+      </div>
     </div>
 
-    <div class="search-box">
-      <input type="text" placeholder="Search for tips...">
-      <button><i class="fas fa-search"></i> Search</button>
+    <div class="dark-mode" title="Toggle dark mode">
+      <i class="fas fa-moon"></i>
     </div>
 
-    <div class="tabs">
-      <button class="tab active" data-category="all"><i class="fas fa-border-all"></i> All Tips</button>
-      <button class="tab" data-category="electricity"><i class="fas fa-bolt"></i> Electricity</button>
-      <button class="tab" data-category="water"><i class="fas fa-tint"></i> Water</button>
-      <button class="tab" data-category="implemented"><i class="fas fa-check-circle"></i> Implemented</button>
-      <button class="tab" data-category="savings"><i class="fas fa-piggy-bank"></i> Highest Savings</button>
-    </div>
+    <script>
+      // Handle tab switching
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", function () {
+          const category = this.getAttribute("data-category");
 
-    <div class="tip-container">
-      <!-- Electricity Tips -->
-      <div class="tip-card" data-categories="electricity">
-        <div class="tip-card-img">
-          <img src="images/image1.avif" alt="LED Lights">
-          <div class="tip-tags">
-            <span class="tag tag-electricity"><i class="fas fa-bolt"></i> Electricity</span>
-            <span class="tag tag-savings"><i class="fas fa-piggy-bank"></i> Save ~₱80/year</span>
-          </div>
-          <div class="implemented-badge">
-            <i class="fas fa-check-circle"></i> Implemented
-          </div>
-        </div>
-        <div class="tip-card-content">
-          <h3>Switch to LED Lighting</h3>
-          <p>LED bulbs use up to 75% less energy than incandescent lighting and can last 25 times longer. Replace your most frequently used bulbs first for maximum savings.</p>
-          <div class="savings-info">
-            <div class="savings-icon">
-              <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="savings-text">
-              Potential savings: <span class="savings-amount">₱80 per year</span>
-            </div>
-          </div>
-          <div class="tip-actions">
-            <button class="implement-btn" data-tip-id="1">
-              <i class="fas fa-check-circle"></i> <span class="btn-text">Mark as Implemented</span>
-            </button>
-            <button class="share-btn" title="Share this tip">
-              <i class="fas fa-share-alt"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+          // Update active tab
+          document
+            .querySelectorAll(".tab")
+            .forEach((t) => t.classList.remove("active"));
+          this.classList.add("active");
 
-      <div class="tip-card" data-categories="electricity">
-        <div class="tip-card-img">
-          <img src="images/image2.jpg" alt="Unplugged">
-          <div class="tip-tags">
-            <span class="tag tag-electricity"><i class="fas fa-bolt"></i> Electricity</span>
-            <span class="tag tag-savings"><i class="fas fa-piggy-bank"></i> Save ~₱60/year</span>
-          </div>
-          <div class="implemented-badge">
-            <i class="fas fa-check-circle"></i> Implemented
-          </div>
-        </div>
-        <div class="tip-card-content">
-          <h3>Unplug Electronics When Not in Use</h3>
-          <p>Even when turned off, many electronics use standby power. Unplugging them or using power strips could save up to 10% on electricity. Focus on TVs, computers, and gaming consoles.</p>
-          <div class="savings-info">
-            <div class="savings-icon">
-              <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="savings-text">
-              Potential savings: <span class="savings-amount">₱60 per year</span>
-            </div>
-          </div>
-          <div class="tip-actions">
-            <button class="implement-btn" data-tip-id="2">
-              <i class="fas fa-check-circle"></i> <span class="btn-text">Mark as Implemented</span>
-            </button>
-            <button class="share-btn" title="Share this tip">
-              <i class="fas fa-share-alt"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="tip-card" data-categories="electricity">
-        <div class="tip-card-img">
-          <img src="images/Image3.avif" alt="Air Conditioner">
-          <div class="tip-tags">
-            <span class="tag tag-electricity"><i class="fas fa-bolt"></i> Electricity</span>
-            <span class="tag tag-savings"><i class="fas fa-piggy-bank"></i> Save ~₱105/year</span>
-          </div>
-          <div class="implemented-badge">
-            <i class="fas fa-check-circle"></i> Implemented
-          </div>
-        </div>
-        <div class="tip-card-content">
-          <h3>Optimize Air Conditioning Temperature</h3>
-          <p>Set your thermostat to 78°F (26°C) in summer and 68°F (20°C) in winter for optimal energy savings. Each degree adjustment can save about 3-5% on energy costs.</p>
-          <div class="savings-info">
-            <div class="savings-icon">
-              <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="savings-text">
-              Potential savings: <span class="savings-amount">₱105 per year</span>
-            </div>
-          </div>
-          <div class="tip-actions">
-            <button class="implement-btn" data-tip-id="3">
-              <i class="fas fa-check-circle"></i> <span class="btn-text">Mark as Implemented</span>
-            </button>
-            <button class="share-btn" title="Share this tip">
-              <i class="fas fa-share-alt"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="tip-card" data-categories="electricity">
-        <div class="tip-card-img">
-          <img src="images/image7.jpg" alt="Natural Light">
-          <div class="tip-tags">
-            <span class="tag tag-electricity"><i class="fas fa-bolt"></i> Electricity</span>
-            <span class="tag tag-savings"><i class="fas fa-piggy-bank"></i> Save ~₱40/year</span>
-          </div>
-          <div class="implemented-badge">
-            <i class="fas fa-check-circle"></i> Implemented
-          </div>
-        </div>
-        <div class="tip-card-content">
-          <h3>Use Natural Light</h3>
-          <p>Open curtains and blinds during the day instead of turning on lights. Position desks and seating near windows to maximize natural daylight and reduce the need for artificial lighting.</p>
-          <div class="savings-info">
-            <div class="savings-icon">
-              <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="savings-text">
-              Potential savings: <span class="savings-amount">₱40 per year</span>
-            </div>
-          </div>
-          <div class="tip-actions">
-            <button class="implement-btn" data-tip-id="4">
-              <i class="fas fa-check-circle"></i> <span class="btn-text">Mark as Implemented</span>
-            </button>
-            <button class="share-btn" title="Share this tip">
-              <i class="fas fa-share-alt"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Water Tips -->
-      <div class="tip-card" data-categories="water">
-        <div class="tip-card-img">
-          <img src="images/image5.webp" alt="Leaky Faucet">
-          <div class="tip-tags">
-            <span class="tag tag-water"><i class="fas fa-tint"></i> Water</span>
-            <span class="tag tag-savings"><i class="fas fa-piggy-bank"></i> Save ~₱70/year</span>
-          </div>
-          <div class="implemented-badge">
-            <i class="fas fa-check-circle"></i> Implemented
-          </div>
-        </div>
-        <div class="tip-card-content">
-          <h3>Fix Leaking Faucets</h3>
-          <p>A faucet that drips at the rate of one drip per second can waste more than 3,000 gallons per year. Checking and fixing leaks promptly can lead to significant water savings.</p>
-          <div class="savings-info">
-            <div class="savings-icon">
-              <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="savings-text">
-              Potential savings: <span class="savings-amount">₱70 per year</span>
-            </div>
-          </div>
-          <div class="tip-actions">
-            <button class="implement-btn" data-tip-id="5">
-              <i class="fas fa-check-circle"></i> <span class="btn-text">Mark as Implemented</span>
-            </button>
-            <button class="share-btn" title="Share this tip">
-              <i class="fas fa-share-alt"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="tip-card" data-categories="water">
-        <div class="tip-card-img">
-          <img src="images/image8.avif" alt="Low Flow Shower Head">
-          <div class="tip-tags">
-            <span class="tag tag-water"><i class="fas fa-tint"></i> Water</span>
-            <span class="tag tag-savings"><i class="fas fa-piggy-bank"></i> Save ~₱95/year</span>
-          </div>
-          <div class="implemented-badge">
-            <i class="fas fa-check-circle"></i> Implemented
-          </div>
-        </div>
-        <div class="tip-card-content">
-          <h3>Install Low-Flow Fixtures</h3>
-          <p>Low-flow showerheads and faucet aerators can reduce water use by 30-50% without affecting performance. Modern fixtures provide strong water pressure while using much less water.</p>
-          <div class="savings-info">
-            <div class="savings-icon">
-              <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="savings-text">
-              Potential savings: <span class="savings-amount">₱95 per year</span>
-            </div>
-          </div>
-          <div class="tip-actions">
-            <button class="implement-btn" data-tip-id="6">
-              <i class="fas fa-check-circle"></i> <span class="btn-text">Mark as Implemented</span>
-            </button>
-            <button class="share-btn" title="Share this tip">
-              <i class="fas fa-share-alt"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="tip-card" data-categories="water">
-        <div class="tip-card-img">
-          <img src="images/image6.jpg" alt="Washing Machine">
-          <div class="tip-tags">
-            <span class="tag tag-water"><i class="fas fa-tint"></i> Water</span>
-            <span class="tag tag-savings"><i class="fas fa-piggy-bank"></i> Save ~₱65/year</span>
-          </div>
-          <div class="implemented-badge">
-            <i class="fas fa-check-circle"></i> Implemented
-          </div>
-        </div>
-        <div class="tip-card-content">
-          <h3>Full Loads Only</h3>
-          <p>Only run dishwashers and washing machines when they're full to maximize water and energy efficiency. Running half-loads wastes water, electricity, and detergent.</p>
-          <div class="savings-info">
-            <div class="savings-icon">
-              <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="savings-text">
-              Potential savings: <span class="savings-amount">₱65 per year</span>
-            </div>
-          </div>
-          <div class="tip-actions">
-            <button class="implement-btn" data-tip-id="7">
-              <i class="fas fa-check-circle"></i> <span class="btn-text">Mark as Implemented</span>
-            </button>
-            <button class="share-btn" title="Share this tip">
-              <i class="fas fa-share-alt"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="tip-card" data-categories="water">
-        <div class="tip-card-img">
-          <img src="images/image9.jfif" alt="Water Plants">
-          <div class="tip-tags">
-            <span class="tag tag-water"><i class="fas fa-tint"></i> Water</span>
-            <span class="tag tag-savings"><i class="fas fa-piggy-bank"></i> Save ~₱55/year</span>
-          </div>
-          <div class="implemented-badge">
-            <i class="fas fa-check-circle"></i> Implemented
-          </div>
-        </div>
-        <div class="tip-card-content">
-          <h3>Water-Efficient Gardening</h3>
-          <p>Water plants early morning or evening to reduce evaporation. Use drip irrigation instead of sprinklers and consider collecting rainwater for garden use to maximize water savings.</p>
-          <div class="savings-info">
-            <div class="savings-icon">
-              <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="savings-text">
-              Potential savings: <span class="savings-amount">₱55 per year</span>
-            </div>
-          </div>
-          <div class="tip-actions">
-            <button class="implement-btn" data-tip-id="8">
-              <i class="fas fa-check-circle"></i> <span class="btn-text">Mark as Implemented</span>
-            </button>
-            <button class="share-btn" title="Share this tip">
-              <i class="fas fa-share-alt"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Empty state for no search results -->
-      <div class="no-results" style="display: none;">
-        <i class="fas fa-search"></i>
-        <h3>No matching tips found</h3>
-        <p>Try adjusting your search term or browse all tips</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="dark-mode" title="Toggle dark mode">
-    <i class="fas fa-moon"></i>
-  </div>
-
-  <script>
-    // Handle tab switching
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', function() {
-        const category = this.getAttribute('data-category');
-        
-        // Update active tab
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Filter tip cards
-        let visibleCount = 0;
-        document.querySelectorAll('.tip-card').forEach(card => {
-          if (category === 'all') {
-            card.style.display = '';
-            visibleCount++;
-          } else if (category === 'implemented') {
-            if (card.classList.contains('is-implemented')) {
-              card.style.display = '';
+          // Filter tip cards
+          let visibleCount = 0;
+          document.querySelectorAll(".tip-card").forEach((card) => {
+            if (category === "all") {
+              card.style.display = "";
               visibleCount++;
+            } else if (category === "implemented") {
+              if (card.classList.contains("is-implemented")) {
+                card.style.display = "";
+                visibleCount++;
+              } else {
+                card.style.display = "none";
+              }
+            } else if (category === "savings") {
+              // Show all but sort by savings amount
+              card.style.display = "";
+              visibleCount++;
+
+              // Get all cards and sort by savings amount
+              const cards = Array.from(document.querySelectorAll(".tip-card"));
+              cards.sort((a, b) => {
+                const savingsA = parseInt(
+                  a
+                    .querySelector(".savings-amount")
+                    .textContent.replace(/\D/g, "")
+                );
+                const savingsB = parseInt(
+                  b
+                    .querySelector(".savings-amount")
+                    .textContent.replace(/\D/g, "")
+                );
+                return savingsB - savingsA; // Sort in descending order
+              });
+
+              // Reorder the cards in the DOM
+              const container = document.querySelector(".tip-container");
+              cards.forEach((card) => container.appendChild(card));
             } else {
-              card.style.display = 'none';
+              if (card.getAttribute("data-categories").includes(category)) {
+                card.style.display = "";
+                visibleCount++;
+              } else {
+                card.style.display = "none";
+              }
             }
-          } else if (category === 'savings') {
-            // Show all but sort by savings amount
-            card.style.display = '';
-            visibleCount++;
-            
-            // Get all cards and sort by savings amount
-            const cards = Array.from(document.querySelectorAll('.tip-card'));
-            cards.sort((a, b) => {
-              const savingsA = parseInt(a.querySelector('.savings-amount').textContent.replace(/\D/g,''));
-              const savingsB = parseInt(b.querySelector('.savings-amount').textContent.replace(/\D/g,''));
-              return savingsB - savingsA; // Sort in descending order
-            });
-            
-            // Reorder the cards in the DOM
-            const container = document.querySelector('.tip-container');
-            cards.forEach(card => container.appendChild(card));
+          });
+
+          // Show/hide empty state
+          const noResults = document.querySelector(".no-results");
+          if (visibleCount === 0) {
+            noResults.style.display = "";
           } else {
-            if (card.getAttribute('data-categories').includes(category)) {
-              card.style.display = '';
-              visibleCount++;
-            } else {
-              card.style.display = 'none';
-            }
+            noResults.style.display = "none";
           }
         });
-        
-        // Show/hide empty state
-        const noResults = document.querySelector('.no-results');
-        if (visibleCount === 0) {
-          noResults.style.display = '';
-        } else {
-          noResults.style.display = 'none';
-        }
       });
-    });
 
-    // Handle marking tips as implemented
-    document.querySelectorAll('.implement-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const tipCard = this.closest('.tip-card');
-        tipCard.classList.toggle('is-implemented');
-        
-        if (tipCard.classList.contains('is-implemented')) {
-          this.querySelector('.btn-text').textContent = 'Implemented';
-          this.classList.add('implemented');
-        } else {
-          this.querySelector('.btn-text').textContent = 'Mark as Implemented';
-          this.classList.remove('implemented');
-        }
+      // Handle marking tips as implemented
+      document.querySelectorAll(".implement-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const tipCard = this.closest(".tip-card");
+          tipCard.classList.toggle("is-implemented");
 
-        // In a real app, this would save the implemented status to the server
-        const tipId = this.getAttribute('data-tip-id');
-        console.log(`Tip ${tipId} implementation status changed to: ${tipCard.classList.contains('is-implemented')}`);
-      });
-    });
+          if (tipCard.classList.contains("is-implemented")) {
+            this.querySelector(".btn-text").textContent = "Implemented";
+            this.classList.add("implemented");
+          } else {
+            this.querySelector(".btn-text").textContent = "Mark as Implemented";
+            this.classList.remove("implemented");
+          }
 
-    // Handle share buttons (just a placeholder functionality)
-    document.querySelectorAll('.share-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const tipTitle = this.closest('.tip-card-content').querySelector('h3').textContent;
-        alert(`Sharing "${tipTitle}" functionality would be implemented here in a real application.`);
-      });
-    });
-
-    // Handle search
-    document.querySelector('.search-box button').addEventListener('click', performSearch);
-    document.querySelector('.search-box input').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        performSearch();
-      }
-    });
-
-    function performSearch() {
-      const searchTerm = document.querySelector('.search-box input').value.toLowerCase();
-      
-      if (searchTerm.trim() === '') {
-        document.querySelectorAll('.tip-card').forEach(card => {
-          card.style.display = '';
+          // In a real app, this would save the implemented status to the server
+          const tipId = this.getAttribute("data-tip-id");
+          console.log(
+            `Tip ${tipId} implementation status changed to: ${tipCard.classList.contains(
+              "is-implemented"
+            )}`
+          );
         });
-        document.querySelector('.no-results').style.display = 'none';
-        return;
-      }
-      
-      let visibleCount = 0;
-      document.querySelectorAll('.tip-card').forEach(card => {
-        const content = card.textContent.toLowerCase();
-        if (content.includes(searchTerm)) {
-          card.style.display = '';
-          visibleCount++;
-        } else {
-          card.style.display = 'none';
+      });
+
+      // Handle share buttons (just a placeholder functionality)
+      document.querySelectorAll(".share-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const tipTitle =
+            this.closest(".tip-card-content").querySelector("h3").textContent;
+          alert(
+            `Sharing "${tipTitle}" functionality would be implemented here in a real application.`
+          );
+        });
+      });
+
+      // Handle search
+      document
+        .querySelector(".search-box button")
+        .addEventListener("click", performSearch);
+      document
+        .querySelector(".search-box input")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            performSearch();
+          }
+        });
+
+      function performSearch() {
+        const searchTerm = document
+          .querySelector(".search-box input")
+          .value.toLowerCase();
+
+        if (searchTerm.trim() === "") {
+          document.querySelectorAll(".tip-card").forEach((card) => {
+            card.style.display = "";
+          });
+          document.querySelector(".no-results").style.display = "none";
+          return;
         }
-      });
-      
-      // Show/hide empty state
-      const noResults = document.querySelector('.no-results');
-      if (visibleCount === 0) {
-        noResults.style.display = '';
-      } else {
-        noResults.style.display = 'none';
+
+        let visibleCount = 0;
+        document.querySelectorAll(".tip-card").forEach((card) => {
+          const content = card.textContent.toLowerCase();
+          if (content.includes(searchTerm)) {
+            card.style.display = "";
+            visibleCount++;
+          } else {
+            card.style.display = "none";
+          }
+        });
+
+        // Show/hide empty state
+        const noResults = document.querySelector(".no-results");
+        if (visibleCount === 0) {
+          noResults.style.display = "";
+        } else {
+          noResults.style.display = "none";
+        }
+
+        // Reset active tab indication
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelector('.tab[data-category="all"]')
+          .classList.add("active");
       }
-      
-      // Reset active tab indication
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelector('.tab[data-category="all"]').classList.add('active');
-    }
-    
-    // Handle dark mode toggle (just a visual indicator for the prototype)
-    document.querySelector('.dark-mode').addEventListener('click', function() {
-      this.classList.toggle('active');
-      alert('Dark mode toggle functionality would be implemented here in the full application.');
-    });
-    
-    // Add animation effect on page load
-    window.addEventListener('load', function() {
-      document.querySelectorAll('.tip-card').forEach((card, index) => {
-        setTimeout(() => {
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        }, index * 100);
+
+      // Handle dark mode toggle (just a visual indicator for the prototype)
+      document
+        .querySelector(".dark-mode")
+        .addEventListener("click", function () {
+          this.classList.toggle("active");
+          alert(
+            "Dark mode toggle functionality would be implemented here in the full application."
+          );
+        });
+
+      // Add animation effect on page load
+      window.addEventListener("load", function () {
+        document.querySelectorAll(".tip-card").forEach((card, index) => {
+          setTimeout(() => {
+            card.style.opacity = "1";
+            card.style.transform = "translateY(0)";
+          }, index * 100);
+        });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
