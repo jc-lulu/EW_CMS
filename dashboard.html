@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | WE CMS</title>
+    <!-- Add Chart.js library -->
+    <script src="links/chart.js"></script>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="fontawesome/css/all.min.css" />
+    <style>
+      :root {
+        --primary-color: #2f3e46;
+        --secondary-color: #3d5a80;
+        --tertiary-color: #a8dadc;
+        --success-color: #2a9d8f;
+        --danger-color: #e63946;
+        --warning-color: #ee9b00;
+        --light-color: #f4f4f4;
+        --dark-color: #333;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        display: flex;
+        color: var(--dark-color);
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: var(--primary-color);
+        color: #fff;
+        height: 100vh;
+        padding: 20px;
+        position: fixed;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        z-index: 100;
+      }
+
+      .sidebar h2 {
+        margin-bottom: 30px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar h2 i {
+        font-size: 1.5rem;
+        color: var(--tertiary-color);
+      }
+
+      .sidebar a {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        text-decoration: none;
+        padding: 12px 15px;
+        border-radius: 6px;
+        transition: all 0.3s;
+        gap: 10px;
+      }
+
+      .sidebar a i {
+        width: 22px;
+      }
+
+      .sidebar a:hover,
+      .sidebar a.active {
+        background-color: var(--secondary-color);
+        transform: translateX(5px);
+      }
+
+      .main {
+        flex: 1;
+        padding: 25px;
+        margin-left: 250px;
+        transition: all 0.3s ease;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        background: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .user-info .info {
+        text-align: right;
+      }
+
+      .user-info .name {
+        font-weight: 600;
+        color: var(--dark-color);
+      }
+
+      .user-info .role {
+        font-size: 0.8rem;
+        color: #6c757d;
+      }
+
+      .user-info img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--tertiary-color);
+      }
+
+      .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        position: relative;
+        transition: all 0.3s ease;
+        border-top: 4px solid var(--primary-color);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .card h3 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .card h3 i {
+        font-size: 1.5rem;
+      }
+
+      .card:nth-child(1) {
+        border-top-color: var(--secondary-color);
+      }
+
+      .card:nth-child(2) {
+        border-top-color: var(--success-color);
+      }
+
+      .card:nth-child(3) {
+        border-top-color: var(--warning-color);
+      }
+
+      .card .trend {
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+      }
+
+      .trend.up {
+        color: white;
+        background-color: var(--danger-color);
+      }
+
+      .trend.down {
+        color: white;
+        background-color: var(--success-color);
+      }
+
+      .big-number {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 15px 0;
+        color: var(--secondary-color);
+      }
+
+      .water-number {
+        color: var(--success-color);
+      }
+
+      .savings-number {
+        color: var(--warning-color);
+      }
+
+      .stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+      }
+
+      .stats-item {
+        text-align: center;
+      }
+
+      .stats-item .label {
+        font-size: 0.8rem;
+        color: #6c757d;
+      }
+
+      .stats-item .value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--dark-color);
+      }
+
+      .progress-wrapper {
+        margin: 20px 0;
+      }
+
+      .progress-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
+
+      .progress-bar {
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .progress-value {
+        height: 100%;
+        border-radius: 4px;
+      }
+
+      .chart-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+      }
+
+      .chart-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .chart-header h3 {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .chart-header h3 i {
+        font-size: 1.5rem;
+      }
+
+      .time-selector {
+        display: flex;
+        gap: 5px;
+      }
+
+      .time-btn {
+        padding: 6px 12px;
+        background: #f1faee;
+        border: 1px solid var(--tertiary-color);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.85rem;
+      }
+
+      .time-btn.active {
+        background: var(--tertiary-color);
+        font-weight: 600;
+      }
+
+      .chart {
+        height: 300px;
+      }
+
+      .savings {
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+      }
+
+      .savings h3 {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .savings-calculator {
+        display: flex;
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .savings-calculator input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.3s;
+      }
+
+      .savings-calculator input:focus {
+        outline: none;
+        border-color: var(--tertiary-color);
+        box-shadow: 0 0 0 3px rgba(168, 218, 220, 0.25);
+      }
+
+      .savings-calculator button {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0 25px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .savings-calculator button:hover {
+        background: var(--secondary-color);
+      }
+
+      #savingsResult {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 6px;
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--warning-color);
+      }
+
+      .tips {
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .tips h3 {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tip-items {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .tip-item {
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        transition: all 0.3s;
+        border-left: 4px solid var(--tertiary-color);
+      }
+
+      .tip-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .tip-item h4 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .tip-item h4 i {
+        font-size: 1rem;
+        color: var(--tertiary-color);
+      }
+
+      .tip-item p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .view-all {
+        display: block;
+        text-align: right;
+        color: var(--secondary-color);
+        margin-top: 20px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .view-all:hover {
+        color: var(--primary-color);
+        transform: translateX(5px);
+      }
+
+      .real-time-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        font-size: 0.85rem;
+        color: var(--success-color);
+      }
+
+      .pulse {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--success-color);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(42, 157, 143, 0.7);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(42, 157, 143, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(42, 157, 143, 0);
+        }
+      }
+
+      @media screen and (max-width: 1024px) {
+        .chart-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .sidebar {
+          width: 70px;
+          padding: 15px 10px;
+        }
+
+        .sidebar h2 span,
+        .sidebar a span {
+          display: none;
+        }
+
+        .sidebar a {
+          justify-content: center;
+        }
+
+        .sidebar a i {
+          font-size: 1.2rem;
+        }
+
+        .main {
+          margin-left: 70px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2><i class="fas fa-bolt"></i> <span>WE CMS</span></h2>
+      <a href="dashboard.html" class="active"
+        ><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a
+      >
+      <a href="history.html"
+        ><i class="fas fa-history"></i> <span>History</span></a
+      >
+      <a href="tips.html"><i class="fas fa-lightbulb"></i> <span>Tips</span></a>
+      <a href="settings.html"
+        ><i class="fas fa-cog"></i> <span>Settings</span></a
+      >
+      <a href="index.html" style="margin-top: auto"
+        ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+      >
+    </div>
+    <div class="main">
+      <div class="header">
+        <h1>Dashboard</h1>
+        <div class="user-info">
+          <div class="info">
+            <div class="name">Admin User</div>
+            <div class="role">Administrator</div>
+          </div>
+          <img src="images/admin.jpg" alt="User Profile" />
+        </div>
+      </div>
+
+      <div class="card-container">
+        <div class="card">
+          <h3><i class="fas fa-bolt"></i> Electricity Usage</h3>
+          <div class="trend down">↓ 5.2%</div>
+          <div class="big-number">28.3 kWh</div>
+          <div class="progress-wrapper">
+            <div class="progress-label">
+              <span>Monthly Progress</span>
+              <span>73% of average</span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-value"
+                style="width: 73%; background-color: #3d5a80"
+              ></div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stats-item">
+              <div class="value">520.7 kWh</div>
+              <div class="label">Monthly Total</div>
+            </div>
+            <div class="stats-item">
+              <div class="value">710.5 kWh</div>
+              <div class="label">Projected</div>
+            </div>
+            <div class="stats-item">
+              <div class="value">₱142.10</div>
+              <div class="label">Cost</div>
+            </div>
+          </div>
+          <div class="real-time-indicator">
+            <span class="pulse"></span> Real-time monitoring active
+          </div>
+        </div>
+        <div class="card">
+          <h3><i class="fas fa-tint"></i> Water Usage</h3>
+          <div class="trend up">↑ 3.7%</div>
+          <div class="big-number water-number">190 L</div>
+          <div class="progress-wrapper">
+            <div class="progress-label">
+              <span>Monthly Progress</span>
+              <span>81% of average</span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-value"
+                style="width: 81%; background-color: #2a9d8f"
+              ></div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stats-item">
+              <div class="value">3,800 L</div>
+              <div class="label">Monthly Total</div>
+            </div>
+            <div class="stats-item">
+              <div class="value">5,250 L</div>
+              <div class="label">Projected</div>
+            </div>
+            <div class="stats-item">
+              <div class="value">₱57.00</div>
+              <div class="label">Cost</div>
+            </div>
+          </div>
+          <div class="real-time-indicator">
+            <span class="pulse"></span> Real-time monitoring active
+          </div>
+        </div>
+        <div class="card">
+          <h3><i class="fas fa-piggy-bank"></i> Potential Savings</h3>
+          <div class="big-number savings-number">₱61.05</div>
+          <div class="progress-wrapper">
+            <div class="progress-label">
+              <span>Conservation Target</span>
+              <span>15% Reduction</span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-value"
+                style="width: 65%; background-color: #ee9b00"
+              ></div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stats-item">
+              <div class="value">₱42.30</div>
+              <div class="label">Electricity</div>
+            </div>
+            <div class="stats-item">
+              <div class="value">₱18.75</div>
+              <div class="label">Water</div>
+            </div>
+            <div class="stats-item">
+              <div class="value">₱732.60</div>
+              <div class="label">Annual</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3><i class="fas fa-bolt"></i> Electricity Consumption</h3>
+            <div class="time-selector">
+              <button class="time-btn active" data-period="daily">Daily</button>
+              <button class="time-btn" data-period="weekly">Weekly</button>
+              <button class="time-btn" data-period="monthly">Monthly</button>
+            </div>
+          </div>
+          <div class="chart">
+            <canvas id="electricityChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3><i class="fas fa-tint"></i> Water Consumption</h3>
+            <div class="time-selector">
+              <button class="time-btn active" data-period="daily">Daily</button>
+              <button class="time-btn" data-period="weekly">Weekly</button>
+              <button class="time-btn" data-period="monthly">Monthly</button>
+            </div>
+          </div>
+          <div class="chart">
+            <canvas id="waterChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="savings">
+        <h3>
+          <i class="fas fa-calculator"></i> Calculate Your Potential Savings
+        </h3>
+        <p>See how much you could save by reducing your consumption:</p>
+        <div class="savings-calculator">
+          <input
+            type="number"
+            id="reductionPercentage"
+            placeholder="Enter reduction percentage (e.g. 10)"
+            min="1"
+            max="100"
+          />
+          <button id="calculateBtn">Calculate</button>
+        </div>
+        <p id="savingsResult">
+          Reduce your consumption by 10% to save approximately
+          <strong>₱73.26</strong> annually.
+        </p>
+      </div>
+
+      <div class="tips">
+        <h3><i class="fas fa-lightbulb"></i> Quick Saving Tips</h3>
+        <div class="tip-items">
+          <div class="tip-item">
+            <h4><i class="fas fa-lightbulb"></i> Switch to LED lighting</h4>
+            <p>
+              LED bulbs use up to 75% less energy than incandescent lighting and
+              can last 25 times longer.
+            </p>
+          </div>
+          <div class="tip-item">
+            <h4><i class="fas fa-tint"></i> Fix leaking faucets</h4>
+            <p>
+              A faucet that drips at the rate of one drip per second can waste
+              more than 3,000 gallons per year.
+            </p>
+          </div>
+          <div class="tip-item">
+            <h4><i class="fas fa-plug"></i> Unplug unused electronics</h4>
+            <p>
+              Even when turned off, many electronics use standby power.
+              Unplugging them could save up to 10% on electricity.
+            </p>
+          </div>
+        </div>
+        <a href="tips.html" class="view-all"
+          >View all tips <i class="fas fa-arrow-right"></i
+        ></a>
+      </div>
+    </div>
+
+    <script>
+      // Sample data for charts - Updated for single household
+      const dates = [
+        "May 4",
+        "May 5",
+        "May 6",
+        "May 7",
+        "May 8",
+        "May 9",
+        "May 10",
+      ];
+      const electricityData = {
+        daily: [9.2, 8.7, 10.3, 9.8, 7.6, 8.9, 8.5],
+        weekly: [67, 59, 63, 61, 58],
+        monthly: [210, 195, 180, 202, 189],
+      };
+      const waterData = {
+        daily: [385, 410, 352, 378, 390, 362, 380],
+        weekly: [2580, 2670, 2520, 2610, 2580],
+        monthly: [10800, 10500, 10650, 10700, 10550],
+      };
+
+      // Initialize charts
+      const electricityCtx = document
+        .getElementById("electricityChart")
+        .getContext("2d");
+      const electricityChart = new Chart(electricityCtx, {
+        type: "line",
+        data: {
+          labels: dates,
+          datasets: [
+            {
+              label: "Electricity (kWh)",
+              data: electricityData.daily,
+              borderColor: "#3d5a80",
+              backgroundColor: "rgba(61, 90, 128, 0.1)",
+              tension: 0.3,
+              fill: true,
+              borderWidth: 3,
+              pointBackgroundColor: "#fff",
+              pointBorderColor: "#3d5a80",
+              pointRadius: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: "top",
+              labels: {
+                boxWidth: 12,
+                font: {
+                  size: 12,
+                },
+              },
+            },
+            tooltip: {
+              mode: "index",
+              intersect: false,
+              backgroundColor: "rgba(47, 62, 70, 0.8)",
+              titleFont: {
+                size: 14,
+              },
+              bodyFont: {
+                size: 13,
+              },
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: function (context) {
+                  return `Consumption: ${context.raw} kWh`;
+                },
+              },
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              grid: {
+                drawBorder: false,
+                color: "rgba(0, 0, 0, 0.05)",
+              },
+              ticks: {
+                font: {
+                  size: 12,
+                },
+              },
+              title: {
+                display: true,
+                text: "kWh",
+                font: {
+                  size: 14,
+                  weight: "bold",
+                },
+              },
+            },
+            x: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                font: {
+                  size: 12,
+                },
+              },
+            },
+          },
+          interaction: {
+            intersect: false,
+            mode: "index",
+          },
+          elements: {
+            line: {
+              borderJoinStyle: "round",
+            },
+          },
+        },
+      });
+
+      const waterCtx = document.getElementById("waterChart").getContext("2d");
+      const waterChart = new Chart(waterCtx, {
+        type: "line",
+        data: {
+          labels: dates,
+          datasets: [
+            {
+              label: "Water (L)",
+              data: waterData.daily,
+              borderColor: "#2a9d8f",
+              backgroundColor: "rgba(42, 157, 143, 0.1)",
+              tension: 0.3,
+              fill: true,
+              borderWidth: 3,
+              pointBackgroundColor: "#fff",
+              pointBorderColor: "#2a9d8f",
+              pointRadius: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: "top",
+              labels: {
+                boxWidth: 12,
+                font: {
+                  size: 12,
+                },
+              },
+            },
+            tooltip: {
+              mode: "index",
+              intersect: false,
+              backgroundColor: "rgba(47, 62, 70, 0.8)",
+              titleFont: {
+                size: 14,
+              },
+              bodyFont: {
+                size: 13,
+              },
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: function (context) {
+                  return `Consumption: ${context.raw} L`;
+                },
+              },
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              grid: {
+                drawBorder: false,
+                color: "rgba(0, 0, 0, 0.05)",
+              },
+              ticks: {
+                font: {
+                  size: 12,
+                },
+              },
+              title: {
+                display: true,
+                text: "Liters",
+                font: {
+                  size: 14,
+                  weight: "bold",
+                },
+              },
+            },
+            x: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                font: {
+                  size: 12,
+                },
+              },
+            },
+          },
+          interaction: {
+            intersect: false,
+            mode: "index",
+          },
+          elements: {
+            line: {
+              borderJoinStyle: "round",
+            },
+          },
+        },
+      });
+
+      // Simulate real-time updates
+      setInterval(() => {
+        // Slightly adjust the last values to simulate real-time changes
+        const newElectricityValue =
+          electricityData.daily[6] + (Math.random() * 0.2 - 0.1);
+        electricityData.daily[6] = parseFloat(newElectricityValue.toFixed(1));
+
+        const newWaterValue = waterData.daily[6] + (Math.random() * 5 - 2.5);
+        waterData.daily[6] = parseFloat(newWaterValue.toFixed(0));
+
+        // Update display values
+        document.querySelector(
+          ".card:nth-child(1) .big-number"
+        ).textContent = `${electricityData.daily[6]} kWh`;
+        document.querySelector(
+          ".card:nth-child(2) .big-number"
+        ).textContent = `${waterData.daily[6]} L`;
+
+        // Update charts
+        electricityChart.data.datasets[0].data = electricityData.daily;
+        electricityChart.update();
+        waterChart.data.datasets[0].data = waterData.daily;
+        waterChart.update();
+      }, 5000);
+
+      // Handle time period selector buttons
+      document.querySelectorAll(".time-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const periodType = this.getAttribute("data-period");
+          const chartContainer = this.closest(".chart-card");
+
+          // Update active button
+          chartContainer
+            .querySelectorAll(".time-btn")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+
+          // Update chart data based on selected period and chart type
+          if (
+            chartContainer
+              .querySelector("h3")
+              .textContent.includes("Electricity")
+          ) {
+            electricityChart.data.datasets[0].data =
+              electricityData[periodType];
+            if (periodType === "daily") electricityChart.data.labels = dates;
+            else if (periodType === "weekly")
+              electricityChart.data.labels = [
+                "Week 1",
+                "Week 2",
+                "Week 3",
+                "Week 4",
+                "Week 5",
+              ];
+            else
+              electricityChart.data.labels = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+              ];
+            electricityChart.update();
+          } else {
+            waterChart.data.datasets[0].data = waterData[periodType];
+            if (periodType === "daily") waterChart.data.labels = dates;
+            else if (periodType === "weekly")
+              waterChart.data.labels = [
+                "Week 1",
+                "Week 2",
+                "Week 3",
+                "Week 4",
+                "Week 5",
+              ];
+            else waterChart.data.labels = ["Jan", "Feb", "Mar", "Apr", "May"];
+            waterChart.update();
+          }
+        });
+      });
+
+      // Handle savings calculator
+      document
+        .getElementById("calculateBtn")
+        .addEventListener("click", function () {
+          const percentage =
+            document.getElementById("reductionPercentage").value || 10;
+          const annualSavings = ((732.6 * percentage) / 100).toFixed(2);
+          document.getElementById(
+            "savingsResult"
+          ).innerHTML = `Reduce your consumption by ${percentage}% to save approximately <strong>₱${annualSavings}</strong> annually.`;
+        });
+    </script>
+  </body>
+</html>
