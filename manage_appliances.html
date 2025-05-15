@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Appliances | WE CMS</title>
+    <!-- Add Chart.js library -->
+    <!-- <script src="links/chart.js"></script> -->
+    <!-- Replace your local Chart.js reference with this CDN version -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="fontawesome/css/all.min.css" />
+    <style>
+      :root {
+        --primary-color: #2f3e46;
+        --secondary-color: #3d5a80;
+        --tertiary-color: #a8dadc;
+        --success-color: #2a9d8f;
+        --danger-color: #e63946;
+        --warning-color: #ee9b00;
+        --light-color: #f4f4f4;
+        --dark-color: #333;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        display: flex;
+        color: var(--dark-color);
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: var(--primary-color);
+        color: #fff;
+        height: 100vh;
+        padding: 20px;
+        position: fixed;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        z-index: 100;
+      }
+
+      .sidebar h2 {
+        margin-bottom: 30px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar h2 i {
+        font-size: 1.5rem;
+        color: var(--tertiary-color);
+      }
+
+      .sidebar a {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        text-decoration: none;
+        padding: 12px 15px;
+        border-radius: 6px;
+        transition: all 0.3s;
+        gap: 10px;
+      }
+
+      .sidebar a i {
+        width: 22px;
+      }
+
+      .sidebar a:hover,
+      .sidebar a.active {
+        background-color: var(--secondary-color);
+        transform: translateX(5px);
+      }
+
+      .main {
+        flex: 1;
+        padding: 25px;
+        margin-left: 250px;
+        transition: all 0.3s ease;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        background: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header h1 i {
+        font-size: 1.6rem;
+        color: var(--secondary-color);
+      }
+
+      .card {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+      }
+
+      .card h3 {
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .card h3 i {
+        font-size: 1.5rem;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .form-group {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--dark-color);
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: var(--tertiary-color);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(168, 218, 220, 0.25);
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+      }
+
+      .btn i {
+        font-size: 1rem;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background-color: var(--light-color);
+        color: var(--dark-color);
+      }
+
+      .btn-secondary:hover {
+        background-color: #e9ecef;
+        transform: translateY(-2px);
+      }
+
+      .btn-danger {
+        background-color: var(--danger-color);
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background-color: #dc3545;
+        transform: translateY(-2px);
+      }
+
+      .btn-success {
+        background-color: var(--success-color);
+        color: white;
+      }
+
+      .btn-success:hover {
+        background-color: #218778;
+        transform: translateY(-2px);
+      }
+
+      .appliance-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .appliance-table th,
+      .appliance-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      .appliance-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: var(--dark-color);
+      }
+
+      .appliance-table tr:hover {
+        background-color: #f8f9fa;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .edit-btn {
+        background-color: var(--tertiary-color);
+        color: var(--dark-color);
+      }
+
+      .edit-btn:hover {
+        background-color: #9acdcf;
+        transform: translateY(-2px);
+      }
+
+      .delete-btn {
+        background-color: #f8d7da;
+        color: var(--danger-color);
+      }
+
+      .delete-btn:hover {
+        background-color: #f5c2c7;
+        transform: translateY(-2px);
+      }
+
+      .appliance-category {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .category-kitchen {
+        background-color: #d8f3dc;
+        color: #2a9d8f;
+      }
+
+      .category-entertainment {
+        background-color: #d5e5ff;
+        color: #457b9d;
+      }
+
+      .category-climate {
+        background-color: #fde6d2;
+        color: #e76f51;
+      }
+
+      .category-lighting {
+        background-color: #fff3b0;
+        color: #ee9b00;
+      }
+
+      .category-other {
+        background-color: #e9ecef;
+        color: #6c757d;
+      }
+
+      .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+      }
+
+      .status-active {
+        background-color: var(--success-color);
+      }
+
+      .status-inactive {
+        background-color: #adb5bd;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 25px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 600px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        animation: slideIn 0.3s;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-header h3 {
+        color: var(--primary-color);
+        margin: 0;
+      }
+
+      .close {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .close:hover {
+        color: var(--dark-color);
+      }
+
+      .modal-footer {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .summary-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s;
+        border-left: 4px solid var(--primary-color);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+
+      .icon-appliances {
+        background-color: #e9ecef;
+        color: var(--primary-color);
+      }
+
+      .icon-consumption {
+        background-color: #d5e5ff;
+        color: #457b9d;
+      }
+
+      .icon-cost {
+        background-color: #fde6d2;
+        color: #e76f51;
+      }
+
+      .stat-info h4 {
+        color: #6c757d;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+
+      .stat-info p {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        margin: 0;
+      }
+
+      .tab-container {
+        margin-bottom: 20px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--dark-color);
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .tab:hover {
+        background-color: #e9ecef;
+      }
+
+      .tab.active {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+      }
+
+      .chart-card {
+        overflow: hidden;
+      }
+
+      .chart-controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .chart-period-btn {
+        background: #f8f9fa;
+        border: none;
+        border-radius: 20px;
+        padding: 5px 15px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .chart-period-btn:hover {
+        background: #e9ecef;
+      }
+
+      .chart-period-btn.active {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .chart-container {
+        position: relative;
+        height: 300px;
+        width: 100%;
+      }
+
+      .chart-split {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+
+      .chart-half {
+        flex: 1;
+        min-width: 300px;
+      }
+
+      .chart-half h4 {
+        margin-bottom: 15px;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+      }
+
+      .savings-stats {
+        margin-top: 15px;
+      }
+
+      .saving-item {
+        display: flex;
+        gap: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        background-color: #f8f9fa;
+        transition: all 0.3s;
+      }
+
+      .saving-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .saving-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+
+      .saving-item:nth-child(1) .saving-icon {
+        background-color: #fde6d2;
+        color: #e76f51;
+      }
+
+      .saving-item:nth-child(2) .saving-icon {
+        background-color: #d8f3dc;
+        color: #2a9d8f;
+      }
+
+      .saving-item:nth-child(3) .saving-icon {
+        background-color: #fff3b0;
+        color: #ee9b00;
+      }
+
+      .saving-title {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 5px;
+      }
+
+      .saving-desc {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-bottom: 5px;
+      }
+
+      .saving-value {
+        font-weight: 700;
+        color: var(--success-color);
+        font-size: 1.1rem;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @media screen and (max-width: 1024px) {
+        .sidebar {
+          width: 80px;
+        }
+
+        .sidebar h2 span,
+        .sidebar a span {
+          display: none;
+        }
+
+        .main {
+          margin-left: 80px;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .form-row {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .form-group {
+          min-width: 100%;
+        }
+
+        .appliance-table {
+          display: block;
+          overflow-x: auto;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <h2><i class="fas fa-bolt"></i> <span>WE CMS</span></h2>
+      <a href="dashboard.html"
+        ><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a
+      >
+      <a href="history.html"
+        ><i class="fas fa-history"></i> <span>History</span></a
+      >
+      <a href="tips.html"><i class="fas fa-lightbulb"></i> <span>Tips</span></a>
+      <a href="manage_appliances.html" class="active"
+        ><i class="fas fa-plug"></i> <span>Appliances</span></a
+      >
+      <a href="settings.html"
+        ><i class="fas fa-cog"></i> <span>Settings</span></a
+      >
+      <a href="index.html" style="margin-top: auto"
+        ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+      >
+    </div>
+
+    <div class="main">
+      <div class="header">
+        <h1><i class="fas fa-plug"></i> Manage Appliances</h1>
+        <!-- <div class="user-info">
+          <div class="info">
+            <div class="name">John Doe</div>
+            <div class="role">Residential User</div>
+          </div>
+          <img src="images/user-avatar.jpg" alt="User Avatar" />
+        </div> -->
+      </div>
+
+      <div class="summary-stats">
+        <div class="stat-card">
+          <div class="stat-icon icon-appliances">
+            <i class="fas fa-plug"></i>
+          </div>
+          <div class="stat-info">
+            <h4>Total Appliances</h4>
+            <p>8</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-consumption">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <div class="stat-info">
+            <h4>Monthly Consumption</h4>
+            <p>357 kWh</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-cost">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="stat-info">
+            <h4>Estimated Monthly Cost</h4>
+            <p>₱3,213.00</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add this right after the summary-stats section and before the "Add New Appliance" card -->
+
+      <div class="card-container">
+        <div class="card chart-card">
+          <h3><i class="fas fa-chart-line"></i> Electricity Consumption</h3>
+          <div class="chart-controls">
+            <button class="chart-period-btn active" data-period="daily">
+              Daily
+            </button>
+            <button class="chart-period-btn" data-period="weekly">
+              Weekly
+            </button>
+            <button class="chart-period-btn" data-period="monthly">
+              Monthly
+            </button>
+          </div>
+          <div class="chart-container">
+            <canvas id="consumptionChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card chart-card">
+          <h3><i class="fas fa-coins"></i> Electricity Cost</h3>
+          <div class="chart-controls">
+            <button class="chart-period-btn active" data-period="daily">
+              Daily
+            </button>
+            <button class="chart-period-btn" data-period="weekly">
+              Weekly
+            </button>
+            <button class="chart-period-btn" data-period="monthly">
+              Monthly
+            </button>
+          </div>
+          <div class="chart-container">
+            <canvas id="costChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <h3><i class="fas fa-chart-pie"></i> Consumption by Category</h3>
+        <div class="chart-split">
+          <div class="chart-half">
+            <canvas id="categoryPieChart"></canvas>
+          </div>
+          <div class="chart-half">
+            <h4>Saving Opportunities</h4>
+            <div class="savings-stats">
+              <div class="saving-item">
+                <div class="saving-icon">
+                  <i class="fas fa-temperature-high"></i>
+                </div>
+                <div class="saving-details">
+                  <p class="saving-title">Climate Control</p>
+                  <p class="saving-desc">
+                    Reducing AC usage by 1hr/day could save:
+                  </p>
+                  <p class="saving-value">₱570/month</p>
+                </div>
+              </div>
+              <div class="saving-item">
+                <div class="saving-icon"><i class="fas fa-utensils"></i></div>
+                <div class="saving-details">
+                  <p class="saving-title">Kitchen Appliances</p>
+                  <p class="saving-desc">Using energy efficient settings:</p>
+                  <p class="saving-value">₱85/month</p>
+                </div>
+              </div>
+              <div class="saving-item">
+                <div class="saving-icon"><i class="fas fa-lightbulb"></i></div>
+                <div class="saving-details">
+                  <p class="saving-title">Lighting</p>
+                  <p class="saving-desc">LED bulb upgrade could save:</p>
+                  <p class="saving-value">₱45/month</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="tab-container">
+        <div class="tabs">
+          <button class="tab active" data-tab="all">
+            <i class="fas fa-border-all"></i> All Appliances
+          </button>
+          <button class="tab" data-tab="kitchen">
+            <i class="fas fa-utensils"></i> Kitchen
+          </button>
+          <button class="tab" data-tab="entertainment">
+            <i class="fas fa-tv"></i> Entertainment
+          </button>
+          <button class="tab" data-tab="climate">
+            <i class="fas fa-temperature-high"></i> Climate Control
+          </button>
+          <button class="tab" data-tab="lighting">
+            <i class="fas fa-lightbulb"></i> Lighting
+          </button>
+        </div>
+      </div> -->
+
+      <div class="card">
+        <h3><i class="fas fa-plus-circle"></i> Add New Appliance</h3>
+        <form id="applianceForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="applianceName">Appliance Name</label>
+              <input
+                type="text"
+                id="applianceName"
+                placeholder="e.g. Refrigerator"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="applianceCategory">Category</label>
+              <select id="applianceCategory" required>
+                <option value="">Select Category</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="climate">Climate Control</option>
+                <option value="lighting">Lighting</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="appliancePower">Power Consumption (Watts)</label>
+              <input
+                type="number"
+                id="appliancePower"
+                placeholder="e.g. 100"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="dailyUsage">Daily Usage (Hours)</label>
+              <input
+                type="number"
+                id="dailyUsage"
+                placeholder="e.g. 5"
+                step="0.1"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="applianceStatus">Status</label>
+              <select id="applianceStatus" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="text-align: right; margin-top: 20px">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Add Appliance
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="tab-container">
+        <div class="tabs">
+          <button class="tab active" data-tab="all">
+            <i class="fas fa-border-all"></i> All Appliances
+          </button>
+          <button class="tab" data-tab="kitchen">
+            <i class="fas fa-utensils"></i> Kitchen
+          </button>
+          <button class="tab" data-tab="entertainment">
+            <i class="fas fa-tv"></i> Entertainment
+          </button>
+          <button class="tab" data-tab="climate">
+            <i class="fas fa-temperature-high"></i> Climate Control
+          </button>
+          <button class="tab" data-tab="lighting">
+            <i class="fas fa-lightbulb"></i> Lighting
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><i class="fas fa-list"></i> My Appliances</h3>
+        <table class="appliance-table">
+          <thead>
+            <tr>
+              <th>Appliance Name</th>
+              <th>Category</th>
+              <th>Power (W)</th>
+              <th>Daily Usage (h)</th>
+              <th>Monthly kWh</th>
+              <th>Est. Cost (₱)</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Air Conditioner</td>
+              <td>
+                <span class="appliance-category category-climate">Climate</span>
+              </td>
+              <td>950</td>
+              <td>8</td>
+              <td>228.0</td>
+              <td>2,052.00</td>
+              <td>
+                <span class="status-indicator status-active"></span> Active
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Refrigerator</td>
+              <td>
+                <span class="appliance-category category-kitchen">Kitchen</span>
+              </td>
+              <td>150</td>
+              <td>24</td>
+              <td>108.0</td>
+              <td>972.00</td>
+              <td>
+                <span class="status-indicator status-active"></span> Active
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>LED TV</td>
+              <td>
+                <span class="appliance-category category-entertainment"
+                  >Entertainment</span
+                >
+              </td>
+              <td>85</td>
+              <td>6</td>
+              <td>15.3</td>
+              <td>137.70</td>
+              <td>
+                <span class="status-indicator status-active"></span> Active
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Ceiling Fan</td>
+              <td>
+                <span class="appliance-category category-climate">Climate</span>
+              </td>
+              <td>65</td>
+              <td>10</td>
+              <td>19.5</td>
+              <td>175.50</td>
+              <td>
+                <span class="status-indicator status-active"></span> Active
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>LED Lights (5)</td>
+              <td>
+                <span class="appliance-category category-lighting"
+                  >Lighting</span
+                >
+              </td>
+              <td>40</td>
+              <td>6</td>
+              <td>7.2</td>
+              <td>64.80</td>
+              <td>
+                <span class="status-indicator status-active"></span> Active
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Laptop</td>
+              <td>
+                <span class="appliance-category category-entertainment"
+                  >Entertainment</span
+                >
+              </td>
+              <td>60</td>
+              <td>5</td>
+              <td>9.0</td>
+              <td>81.00</td>
+              <td>
+                <span class="status-indicator status-active"></span> Active
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Rice Cooker</td>
+              <td>
+                <span class="appliance-category category-kitchen">Kitchen</span>
+              </td>
+              <td>700</td>
+              <td>1</td>
+              <td>21.0</td>
+              <td>189.00</td>
+              <td>
+                <span class="status-indicator status-active"></span> Active
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Old Desktop PC</td>
+              <td>
+                <span class="appliance-category category-entertainment"
+                  >Entertainment</span
+                >
+              </td>
+              <td>200</td>
+              <td>2</td>
+              <td>12.0</td>
+              <td>108.00</td>
+              <td>
+                <span class="status-indicator status-inactive"></span> Inactive
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-edit"></i> Edit Appliance</h3>
+          <span class="close">&times;</span>
+        </div>
+        <form id="editApplianceForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editApplianceName">Appliance Name</label>
+              <input
+                type="text"
+                id="editApplianceName"
+                placeholder="e.g. Refrigerator"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editApplianceCategory">Category</label>
+              <select id="editApplianceCategory" required>
+                <option value="">Select Category</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="climate">Climate Control</option>
+                <option value="lighting">Lighting</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editAppliancePower">Power Consumption (Watts)</label>
+              <input
+                type="number"
+                id="editAppliancePower"
+                placeholder="e.g. 100"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editDailyUsage">Daily Usage (Hours)</label>
+              <input
+                type="number"
+                id="editDailyUsage"
+                placeholder="e.g. 5"
+                step="0.1"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editApplianceStatus">Status</label>
+              <select id="editApplianceStatus" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelEdit">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-success">
+              <i class="fas fa-save"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function initCharts() {
+        // Daily data - last 7 days
+        const dailyLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const dailyConsumption = [12.5, 11.8, 13.2, 10.9, 12.6, 14.3, 11.3];
+        const dailyCost = dailyConsumption.map((value) => value * 9); // ₱9 per kWh
+
+        // Weekly data - last 4 weeks
+        const weeklyLabels = ["Week 1", "Week 2", "Week 3", "Week 4"];
+        const weeklyConsumption = [82.4, 85.7, 89.2, 79.3];
+        const weeklyCost = weeklyConsumption.map((value) => value * 9);
+
+        // Monthly data - last 6 months
+        const monthlyLabels = [
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+        ];
+        const monthlyConsumption = [310, 345, 370, 352, 330, 357];
+        const monthlyCost = monthlyConsumption.map((value) => value * 9);
+
+        // Create consumption chart
+        const consumptionCtx = document
+          .getElementById("consumptionChart")
+          .getContext("2d");
+        const consumptionChart = new Chart(consumptionCtx, {
+          type: "line",
+          data: {
+            labels: dailyLabels,
+            datasets: [
+              {
+                label: "kWh",
+                data: dailyConsumption,
+                backgroundColor: "rgba(168, 218, 220, 0.2)",
+                borderColor: "#457b9d",
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "kWh",
+                },
+              },
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: "Daily Consumption (kWh)",
+              },
+            },
+          },
+        });
+
+        // Create cost chart
+        const costCtx = document.getElementById("costChart").getContext("2d");
+        const costChart = new Chart(costCtx, {
+          type: "bar",
+          data: {
+            labels: dailyLabels,
+            datasets: [
+              {
+                label: "₱",
+                data: dailyCost,
+                backgroundColor: "rgba(231, 111, 81, 0.6)",
+                borderColor: "#e76f51",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "₱",
+                },
+              },
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: "Daily Cost (₱)",
+              },
+            },
+          },
+        });
+
+        // Create category pie chart
+        const categoryCtx = document
+          .getElementById("categoryPieChart")
+          .getContext("2d");
+        const categoryChart = new Chart(categoryCtx, {
+          type: "doughnut",
+          data: {
+            labels: [
+              "Climate Control",
+              "Kitchen",
+              "Entertainment",
+              "Lighting",
+              "Other",
+            ],
+            datasets: [
+              {
+                data: [247.5, 129.0, 36.3, 7.2, 0],
+                backgroundColor: [
+                  "#e76f51", // Climate
+                  "#2a9d8f", // Kitchen
+                  "#457b9d", // Entertainment
+                  "#ee9b00", // Lighting
+                  "#6c757d", // Other
+                ],
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              title: {
+                display: true,
+                text: "Consumption by Category (kWh)",
+              },
+              legend: {
+                position: "bottom",
+              },
+            },
+          },
+        });
+
+        // Handle period buttons for consumption chart
+        document
+          .querySelectorAll(".chart-card:nth-child(1) .chart-period-btn")
+          .forEach((btn) => {
+            btn.addEventListener("click", function () {
+              document
+                .querySelectorAll(".chart-card:nth-child(1) .chart-period-btn")
+                .forEach((b) => b.classList.remove("active"));
+              this.classList.add("active");
+
+              let labels, data, title;
+              const period = this.dataset.period;
+
+              switch (period) {
+                case "daily":
+                  labels = dailyLabels;
+                  data = dailyConsumption;
+                  title = "Daily Consumption (kWh)";
+                  break;
+                case "weekly":
+                  labels = weeklyLabels;
+                  data = weeklyConsumption;
+                  title = "Weekly Consumption (kWh)";
+                  break;
+                case "monthly":
+                  labels = monthlyLabels;
+                  data = monthlyConsumption;
+                  title = "Monthly Consumption (kWh)";
+                  break;
+              }
+
+              consumptionChart.data.labels = labels;
+              consumptionChart.data.datasets[0].data = data;
+              consumptionChart.options.plugins.title.text = title;
+              consumptionChart.update();
+            });
+          });
+
+        // Handle period buttons for cost chart
+        document
+          .querySelectorAll(".chart-card:nth-child(2) .chart-period-btn")
+          .forEach((btn) => {
+            btn.addEventListener("click", function () {
+              document
+                .querySelectorAll(".chart-card:nth-child(2) .chart-period-btn")
+                .forEach((b) => b.classList.remove("active"));
+              this.classList.add("active");
+
+              let labels, data, title;
+              const period = this.dataset.period;
+
+              switch (period) {
+                case "daily":
+                  labels = dailyLabels;
+                  data = dailyCost;
+                  title = "Daily Cost (₱)";
+                  break;
+                case "weekly":
+                  labels = weeklyLabels;
+                  data = weeklyCost;
+                  title = "Weekly Cost (₱)";
+                  break;
+                case "monthly":
+                  labels = monthlyLabels;
+                  data = monthlyCost;
+                  title = "Monthly Cost (₱)";
+                  break;
+              }
+
+              costChart.data.labels = labels;
+              costChart.data.datasets[0].data = data;
+              costChart.options.plugins.title.text = title;
+              costChart.update();
+            });
+          });
+
+        return {
+          consumptionChart,
+          costChart,
+          categoryChart,
+        };
+      }
+
+      // Initialize charts when page loads
+      let charts;
+      window.addEventListener("DOMContentLoaded", function () {
+        updateTotals();
+        charts = initCharts();
+
+        // Update pie chart when appliances change
+        const observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (
+              (mutation.type === "childList" &&
+                mutation.target.classList.contains("appliance-table")) ||
+              mutation.target.tagName === "TBODY"
+            ) {
+              updateCategoryChart();
+            }
+          });
+        });
+
+        // Watch for table changes
+        observer.observe(document.querySelector(".appliance-table tbody"), {
+          childList: true,
+          subtree: true,
+        });
+      });
+
+      // Update the pie chart based on current appliance data
+      function updateCategoryChart() {
+        if (!charts || !charts.categoryChart) return;
+
+        let climate = 0,
+          kitchen = 0,
+          entertainment = 0,
+          lighting = 0,
+          other = 0;
+
+        document
+          .querySelectorAll(".appliance-table tbody tr")
+          .forEach((row) => {
+            const status = row
+              .querySelector("td:nth-child(7)")
+              .textContent.trim();
+            if (!status.includes("Active")) return;
+
+            const monthlyKwh = parseFloat(
+              row.querySelector("td:nth-child(5)").textContent
+            );
+            const category = row
+              .querySelector("td:nth-child(2)")
+              .textContent.trim()
+              .toLowerCase();
+
+            if (category.includes("climate")) {
+              climate += monthlyKwh;
+            } else if (category.includes("kitchen")) {
+              kitchen += monthlyKwh;
+            } else if (category.includes("entertainment")) {
+              entertainment += monthlyKwh;
+            } else if (category.includes("lighting")) {
+              lighting += monthlyKwh;
+            } else {
+              other += monthlyKwh;
+            }
+          });
+
+        // Update chart data
+        charts.categoryChart.data.datasets[0].data = [
+          climate,
+          kitchen,
+          entertainment,
+          lighting,
+          other,
+        ];
+        charts.categoryChart.update();
+      }
+      // Calculate total consumption and cost
+      function updateTotals() {
+        let totalKwh = 0;
+        let totalCost = 0;
+        const activeAppliances = [];
+
+        document
+          .querySelectorAll(".appliance-table tbody tr")
+          .forEach((row) => {
+            const status = row
+              .querySelector("td:nth-child(7)")
+              .textContent.trim();
+            if (status.includes("Active")) {
+              const monthlyKwh = parseFloat(
+                row.querySelector("td:nth-child(5)").textContent
+              );
+              const cost = parseFloat(
+                row
+                  .querySelector("td:nth-child(6)")
+                  .textContent.replace("₱", "")
+                  .replace(",", "")
+              );
+
+              totalKwh += monthlyKwh;
+              totalCost += cost;
+              activeAppliances.push(row);
+            }
+          });
+
+        // Update the stats display
+        document.querySelector(".stat-info:nth-child(2) p").textContent =
+          activeAppliances.length.toString();
+        document.querySelector(".stat-info:nth-child(1) p").textContent =
+          Math.round(totalKwh) + " kWh";
+        document.querySelector(".stat-info:nth-child(3) p").textContent =
+          "₱" + totalCost.toFixed(2);
+
+        return {
+          totalKwh,
+          totalCost,
+          activeCount: activeAppliances.length,
+        };
+      }
+
+      // Run this on page load
+      //   window.addEventListener("DOMContentLoaded", function () {
+      //     updateTotals();
+      //   });
+
+      // Tab switching
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", function () {
+          document
+            .querySelectorAll(".tab")
+            .forEach((t) => t.classList.remove("active"));
+          this.classList.add("active");
+
+          const category = this.dataset.tab;
+          const rows = document.querySelectorAll(".appliance-table tbody tr");
+
+          if (category === "all") {
+            rows.forEach((row) => (row.style.display = ""));
+          } else {
+            rows.forEach((row) => {
+              const categoryCell = row
+                .querySelector("td:nth-child(2)")
+                .textContent.toLowerCase();
+              if (categoryCell.includes(category)) {
+                row.style.display = "";
+              } else {
+                row.style.display = "none";
+              }
+            });
+          }
+        });
+      });
+
+      // Modal handling
+      const modal = document.getElementById("editModal");
+      const editButtons = document.querySelectorAll(".edit-btn");
+      const closeBtn = document.querySelector(".close");
+      const cancelBtn = document.getElementById("cancelEdit");
+
+      // Open modal when edit button is clicked
+      editButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          modal.style.display = "block";
+
+          const row = this.closest("tr");
+          document.getElementById("editApplianceName").value =
+            row.cells[0].textContent;
+
+          const categoryText = row.cells[1].textContent.trim();
+          const categorySelect = document.getElementById(
+            "editApplianceCategory"
+          );
+
+          if (categoryText.includes("Kitchen")) {
+            categorySelect.value = "kitchen";
+          } else if (categoryText.includes("Entertainment")) {
+            categorySelect.value = "entertainment";
+          } else if (categoryText.includes("Climate")) {
+            categorySelect.value = "climate";
+          } else if (categoryText.includes("Lighting")) {
+            categorySelect.value = "lighting";
+          } else {
+            categorySelect.value = "other";
+          }
+
+          document.getElementById("editAppliancePower").value =
+            row.cells[2].textContent;
+          document.getElementById("editDailyUsage").value =
+            row.cells[3].textContent;
+          document.getElementById("editApplianceStatus").value =
+            row.cells[6].textContent.trim().toLowerCase().includes("active")
+              ? "active"
+              : "inactive";
+        });
+      });
+
+      // Close modal
+      closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+      });
+
+      cancelBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+      });
+
+      // Close modal if clicked outside
+      window.addEventListener("click", function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      });
+
+      // Delete button handling
+      document.querySelectorAll(".delete-btn").forEach((button) => {
+        button.addEventListener("click", function () {
+          if (confirm("Are you sure you want to delete this appliance?")) {
+            this.closest("tr").remove();
+            updateTotals();
+            alert("Appliance deleted successfully!");
+          }
+        });
+      });
+
+      // Form submission
+      document
+        .getElementById("applianceForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Get form values
+          const name = document.getElementById("applianceName").value;
+          const category = document.getElementById("applianceCategory").value;
+          const power = document.getElementById("appliancePower").value;
+          const usage = document.getElementById("dailyUsage").value;
+          const status = document.getElementById("applianceStatus").value;
+
+          // Calculate monthly kWh and cost
+          const monthlyKwh = ((power * usage * 30) / 1000).toFixed(1);
+          const monthlyCost = (monthlyKwh * 9).toFixed(2); // Using ₱9 per kWh rate
+
+          // Create new row for the table
+          const tbody = document.querySelector(".appliance-table tbody");
+          const newRow = tbody.insertRow(0); // Insert at the top
+
+          // Insert cells with data
+          newRow.innerHTML = `
+            <td>${name}</td>
+            <td><span class="appliance-category category-${category}">${getCategoryName(
+            category
+          )}</span></td>
+            <td>${power}</td>
+            <td>${usage}</td>
+            <td>${monthlyKwh}</td>
+            <td>${monthlyCost}</td>
+            <td><span class="status-indicator status-${status}"></span> ${
+            status === "active" ? "Active" : "Inactive"
+          }</td>
+            <td>
+              <div class="actions">
+                <button class="action-btn edit-btn" title="Edit">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <button class="action-btn delete-btn" title="Delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          `;
+
+          // Add event listeners to new buttons
+          const newEditBtn = newRow.querySelector(".edit-btn");
+          const newDeleteBtn = newRow.querySelector(".delete-btn");
+
+          newEditBtn.addEventListener("click", function () {
+            modal.style.display = "block";
+            // Populate form with row data
+            document.getElementById("editApplianceName").value = name;
+            document.getElementById("editApplianceCategory").value = category;
+            document.getElementById("editAppliancePower").value = power;
+            document.getElementById("editDailyUsage").value = usage;
+            document.getElementById("editApplianceStatus").value = status;
+          });
+
+          newDeleteBtn.addEventListener("click", function () {
+            if (confirm("Are you sure you want to delete this appliance?")) {
+              newRow.remove();
+              updateTotals();
+              alert("Appliance deleted successfully!");
+            }
+          });
+
+          // Reset form
+          this.reset();
+
+          // Update totals
+          updateTotals();
+
+          // Show success message
+          alert("Appliance added successfully!");
+        });
+
+      // Edit form submission
+      document
+        .getElementById("editApplianceForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Get the edited values
+          const name = document.getElementById("editApplianceName").value;
+          const category = document.getElementById(
+            "editApplianceCategory"
+          ).value;
+          const power = document.getElementById("editAppliancePower").value;
+          const usage = document.getElementById("editDailyUsage").value;
+          const status = document.getElementById("editApplianceStatus").value;
+
+          // Calculate monthly kWh and cost
+          const monthlyKwh = ((power * usage * 30) / 1000).toFixed(1);
+          const monthlyCost = (monthlyKwh * 9).toFixed(2); // Using ₱9 per kWh rate
+
+          // Find the row being edited (the last one clicked)
+          const editButtons = document.querySelectorAll(".edit-btn");
+          let rowToEdit;
+
+          editButtons.forEach((btn) => {
+            if (getComputedStyle(modal).display === "block") {
+              if (
+                btn === document.activeElement ||
+                btn === document.querySelector(":focus")
+              ) {
+                rowToEdit = btn.closest("tr");
+              }
+            }
+          });
+
+          if (rowToEdit) {
+            // Update the row with new values
+            rowToEdit.cells[0].textContent = name;
+            rowToEdit.cells[1].innerHTML = `<span class="appliance-category category-${category}">${getCategoryName(
+              category
+            )}</span>`;
+            rowToEdit.cells[2].textContent = power;
+            rowToEdit.cells[3].textContent = usage;
+            rowToEdit.cells[4].textContent = monthlyKwh;
+            rowToEdit.cells[5].textContent = monthlyCost;
+            rowToEdit.cells[6].innerHTML = `<span class="status-indicator status-${status}"></span> ${
+              status === "active" ? "Active" : "Inactive"
+            }`;
+
+            // Update totals
+            updateTotals();
+          }
+
+          alert("Changes saved successfully!");
+          modal.style.display = "none";
+        });
+
+      // Helper function to get category name
+      function getCategoryName(category) {
+        switch (category) {
+          case "kitchen":
+            return "Kitchen";
+          case "entertainment":
+            return "Entertainment";
+          case "climate":
+            return "Climate";
+          case "lighting":
+            return "Lighting";
+          default:
+            return "Other";
+        }
+      }
+    </script>
+  </body>
+</html>
