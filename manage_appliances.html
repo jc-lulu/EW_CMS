@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manage Appliances | WE CMS</title>
-    <!-- Add Chart.js library -->
+    <title>Manage Appliances | WE CMS</title>    <!-- Add Chart.js library -->
     <!-- <script src="links/chart.js"></script> -->
     <!-- Replace your local Chart.js reference with this CDN version -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Add Font Awesome for icons -->
+    <!-- Add Font Awesome for icons - use CDN as backup -->
     <link rel="stylesheet" href="fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       :root {
         --primary-color: #2f3e46;
@@ -516,23 +516,92 @@
 
       .chart-period-btn:hover {
         background: #e9ecef;
-      }
-
-      .chart-period-btn.active {
+      }      .chart-period-btn.active {
         background-color: var(--primary-color);
         color: white;
-      }
-
-      .chart-container {
+      }      .chart-container {
         position: relative;
         height: 300px;
         width: 100%;
+        background-color: rgba(248, 249, 250, 0.5);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .chart-split {
         display: flex;
         flex-wrap: wrap;
         gap: 30px;
+      }
+      
+      /* Chart error message styling */
+      .chart-error {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        color: var(--danger-color);
+        gap: 10px;
+      }
+      
+      .chart-error i {
+        font-size: 2rem;
+      }
+      
+      /* Appliance comparison chart styles */
+      .chart-type-selector {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+      
+      .chart-type-btn {
+        background: #f8f9fa;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      
+      .chart-type-btn:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+      }
+      
+      .chart-type-btn.active {
+        background-color: var(--primary-color);
+        color: white;
+      }
+      
+      .chart-legend {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+      }
+      
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+      }
+      
+      .legend-color {
+        width: 15px;
+        height: 15px;
+        border-radius: 3px;
+        display: inline-block;
       }
 
       .chart-half {
@@ -615,11 +684,50 @@
         to {
           opacity: 1;
         }
-      }
-
-      @keyframes slideIn {
+      }      @keyframes slideIn {
         from {
           transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+      /* Toast notification styles */
+      .toast-message {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 6px;
+        color: white;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        z-index: 9999;
+        transition: opacity 0.5s;
+        animation: slideUp 0.3s ease-out;
+      }
+      
+      .toast-message.success {
+        background-color: var(--success-color);
+      }
+      
+      .toast-message.error {
+        background-color: var(--danger-color);
+      }
+      
+      .toast-message i {
+        font-size: 1.2rem;
+      }
+      
+      @keyframes slideUp {
+        from {
+          transform: translateY(20px);
           opacity: 0;
         }
         to {
@@ -715,7 +823,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-icon icon-cost">
-            <i class="fas fa-dollar-sign"></i>
+            <i class="fas fa-peso-sign"></i>
           </div>
           <div class="stat-info">
             <h4>Estimated Monthly Cost</h4>
@@ -761,9 +869,8 @@
           <div class="chart-container">
             <canvas id="costChart"></canvas>
           </div>
-        </div>
-      </div>
-
+        </div>      </div>
+      
       <div class="card chart-card">
         <h3><i class="fas fa-chart-pie"></i> Consumption by Category</h3>
         <div class="chart-split">
@@ -802,6 +909,41 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Per Appliance Comparison Chart -->
+      <div class="card chart-card">
+        <h3><i class="fas fa-exchange-alt"></i> Compare Individual Appliances</h3>
+        <div class="chart-controls">
+          <div class="chart-type-selector">
+            <button class="chart-type-btn active" data-type="consumption">
+              <i class="fas fa-bolt"></i> Consumption
+            </button>
+            <button class="chart-type-btn" data-type="cost">
+              <i class="fas fa-peso-sign"></i> Cost
+            </button>
+            <button class="chart-type-btn" data-type="usage">
+              <i class="fas fa-clock"></i> Usage Hours
+            </button>
+          </div>
+        </div>
+        <div class="chart-container" style="height: 400px;">
+          <canvas id="applianceComparisonChart"></canvas>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #3d5a80;"></span>
+            <span class="legend-label">kWh per Month</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #e76f51;"></span>
+            <span class="legend-label">Cost per Month (₱)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #2a9d8f;"></span>
+            <span class="legend-label">Daily Usage (hours)</span>
           </div>
         </div>
       </div>
@@ -1192,10 +1334,12 @@
           </div>
         </form>
       </div>
-    </div>
-
-    <script>
+    </div>    <script>
+      // Add console logging to debug chart initialization
+      console.log('Script loaded');
+      
       function initCharts() {
+        console.log('initCharts function called');
         // Daily data - last 7 days
         const dailyLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
         const dailyConsumption = [12.5, 11.8, 13.2, 10.9, 12.6, 14.3, 11.3];
@@ -1216,27 +1360,28 @@
           "November",
         ];
         const monthlyConsumption = [310, 345, 370, 352, 330, 357];
-        const monthlyCost = monthlyConsumption.map((value) => value * 9);
-
-        // Create consumption chart
-        const consumptionCtx = document
-          .getElementById("consumptionChart")
-          .getContext("2d");
+        const monthlyCost = monthlyConsumption.map((value) => value * 9);        // Create consumption chart
+        const consumptionCanvas = document.getElementById("consumptionChart");
+        if (!consumptionCanvas) {
+          console.error("consumptionChart canvas element not found!");
+          return null;
+        }
+        const consumptionCtx = consumptionCanvas.getContext("2d");
+        console.log('Creating consumption chart');
         const consumptionChart = new Chart(consumptionCtx, {
           type: "line",
           data: {
             labels: dailyLabels,
-            datasets: [
-              {
-                label: "kWh",
-                data: dailyConsumption,
-                backgroundColor: "rgba(168, 218, 220, 0.2)",
-                borderColor: "#457b9d",
-                borderWidth: 2,
-                tension: 0.3,
-                fill: true,
-              },
-            ],
+            datasets: [{
+              label: "Daily Consumption (kWh)",
+              data: dailyConsumption,
+              backgroundColor: "rgba(61, 90, 128, 0.2)",
+              borderColor: "rgba(61, 90, 128, 1)",
+              borderWidth: 2,
+              tension: 0.4,
+              pointBackgroundColor: "rgba(61, 90, 128, 1)",
+              fill: true
+            }],
           },
           options: {
             responsive: true,
@@ -1255,23 +1400,36 @@
                 display: true,
                 text: "Daily Consumption (kWh)",
               },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return context.parsed.y.toFixed(1) + " kWh";
+                  }
+                }
+              }
             },
           },
-        });
-
-        // Create cost chart
-        const costCtx = document.getElementById("costChart").getContext("2d");
+        });        // Create cost chart
+        const costCanvas = document.getElementById("costChart");
+        if (!costCanvas) {
+          console.error("costChart canvas element not found!");
+          return null;
+        }
+        const costCtx = costCanvas.getContext("2d");
+        console.log('Creating cost chart');
         const costChart = new Chart(costCtx, {
           type: "bar",
           data: {
             labels: dailyLabels,
             datasets: [
               {
-                label: "₱",
+                label: "Daily Cost (₱)",
                 data: dailyCost,
-                backgroundColor: "rgba(231, 111, 81, 0.6)",
+                backgroundColor: "rgba(231, 111, 81, 0.7)",
                 borderColor: "#e76f51",
                 borderWidth: 1,
+                borderRadius: 4,
+                hoverBackgroundColor: "rgba(231, 111, 81, 0.9)",
               },
             ],
           },
@@ -1283,23 +1441,42 @@
                 beginAtZero: true,
                 title: {
                   display: true,
-                  text: "₱",
+                  text: "Cost (₱)",
                 },
+                grid: {
+                  display: true,
+                  color: "rgba(0, 0, 0, 0.05)"
+                }
               },
+              x: {
+                grid: {
+                  display: false
+                }
+              }
             },
             plugins: {
               title: {
                 display: true,
                 text: "Daily Cost (₱)",
               },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return "₱" + context.parsed.y.toFixed(2);
+                  }
+                }
+              }
             },
-          },
-        });
-
+          },        });
+        
         // Create category pie chart
-        const categoryCtx = document
-          .getElementById("categoryPieChart")
-          .getContext("2d");
+        const categoryCanvas = document.getElementById("categoryPieChart");
+        if (!categoryCanvas) {
+          console.error("categoryPieChart canvas element not found!");
+          return null;
+        }
+        const categoryCtx = categoryCanvas.getContext("2d");
+        console.log('Creating category pie chart');
         const categoryChart = new Chart(categoryCtx, {
           type: "doughnut",
           data: {
@@ -1320,21 +1497,44 @@
                   "#ee9b00", // Lighting
                   "#6c757d", // Other
                 ],
-                borderWidth: 1,
+                borderColor: "white",
+                borderWidth: 2,
+                hoverBorderWidth: 3,
+                hoverOffset: 10,
               },
             ],
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            cutout: '65%',
             plugins: {
               title: {
                 display: true,
                 text: "Consumption by Category (kWh)",
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                }
               },
               legend: {
                 position: "bottom",
+                labels: {
+                  padding: 15,
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
               },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const value = context.parsed;
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = ((value * 100) / total).toFixed(1) + '%';
+                    return `${context.label}: ${value} kWh (${percentage})`;
+                  }
+                }
+              }
             },
           },
         });
@@ -1411,22 +1611,503 @@
               costChart.data.labels = labels;
               costChart.data.datasets[0].data = data;
               costChart.options.plugins.title.text = title;
-              costChart.update();
-            });
+              costChart.update();            });
           });
+          
+        // Create appliance comparison chart
+        const applianceComparisonCanvas = document.getElementById("applianceComparisonChart");
+        if (!applianceComparisonCanvas) {
+          console.error("applianceComparisonChart canvas element not found!");
+          return null;
+        }
+        
+        const applianceComparisonCtx = applianceComparisonCanvas.getContext("2d");
+        console.log('Creating appliance comparison chart');
+        
+        // Get appliance data from the table
+        let applianceData;
+        try {
+          applianceData = getApplianceDataFromTable();
+          console.log('Appliance data loaded:', applianceData);
+        } catch (error) {
+          console.error('Error loading appliance data:', error);
+          applianceData = {
+            labels: ["No Data"],
+            consumptionData: [0],
+            costData: [0],
+            usageData: [0]
+          };
+        }
+          
+        const applianceComparisonChart = new Chart(applianceComparisonCtx, {
+          type: "bar",
+          data: {
+            labels: applianceData.labels,
+            datasets: [
+              {
+                label: "Monthly Consumption (kWh)",
+                data: applianceData.consumptionData,
+                backgroundColor: "rgba(61, 90, 128, 0.7)",
+                borderColor: "rgba(61, 90, 128, 1)",
+                borderWidth: 1,
+                borderRadius: 4,
+                barPercentage: 0.6,
+                categoryPercentage: 0.8,
+                hidden: false
+              },
+              {
+                label: "Monthly Cost (₱)",
+                data: applianceData.costData,
+                backgroundColor: "rgba(231, 111, 81, 0.7)",
+                borderColor: "rgba(231, 111, 81, 1)",
+                borderWidth: 1,
+                borderRadius: 4,
+                barPercentage: 0.6,
+                categoryPercentage: 0.8,
+                hidden: true
+              },
+              {
+                label: "Daily Usage (Hours)",
+                data: applianceData.usageData,
+                backgroundColor: "rgba(42, 157, 143, 0.7)",
+                borderColor: "rgba(42, 157, 143, 1)",
+                borderWidth: 1,
+                borderRadius: 4,
+                barPercentage: 0.6,
+                categoryPercentage: 0.8,
+                hidden: true
+              }
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                beginAtZero: true,
+                grid: {
+                  display: true,
+                  color: "rgba(0, 0, 0, 0.05)"
+                },
+                ticks: {
+                  callback: function(value) {
+                    return value;
+                  }
+                }
+              },
+              y: {
+                grid: {
+                  display: false
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              },              tooltip: {
+                callbacks: {
+                  title: function(tooltipItems) {
+                    // Return the appliance name as title
+                    return tooltipItems[0].label || 'Unknown';
+                  },
+                  label: function(context) {
+                    const datasetLabel = context.dataset.label || "";
+                    const value = context.parsed.x;
+                    if (isNaN(value)) {
+                      return `${datasetLabel}: N/A`;
+                    }
+                    
+                    if (datasetLabel.includes("Cost")) {
+                      return `${datasetLabel}: ₱${value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    } else if (datasetLabel.includes("Consumption")) {
+                      return `${datasetLabel}: ${value.toFixed(1)} kWh`;
+                    } else {
+                      return `${datasetLabel}: ${value} hours`;
+                    }
+                  },
+                  footer: function(tooltipItems) {
+                    // Add additional information based on data type
+                    const dataset = tooltipItems[0].dataset;
+                    const datasetLabel = dataset.label || "";
+                    const value = tooltipItems[0].parsed.x;
+                    
+                    if (datasetLabel.includes("Cost")) {
+                      return `Monthly electricity bill contribution`;
+                    } else if (datasetLabel.includes("Consumption")) {
+                      const percentOfTotal = applianceData.consumptionData.reduce((a, b) => a + b, 0);
+                      if (percentOfTotal > 0) {
+                        return `${((value / percentOfTotal) * 100).toFixed(1)}% of total consumption`;
+                      }
+                    } else if (datasetLabel.includes("Usage")) {
+                      return `${(value * 30).toFixed(0)} hours per month`;
+                    }
+                    return '';
+                  }
+                },
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleFont: {
+                  weight: 'bold'
+                },
+                padding: 12,
+                displayColors: true,
+                borderColor: 'white',
+                borderWidth: 1
+              }
+            },
+          }
+        });
 
+        // Add event listeners for the chart type buttons
+        document.querySelectorAll(".chart-type-btn").forEach(btn => {
+          btn.addEventListener("click", function() {
+            // Remove active class from all buttons
+            document.querySelectorAll(".chart-type-btn").forEach(b => b.classList.remove("active"));
+            // Add active class to clicked button
+            this.classList.add("active");
+            
+            const chartType = this.dataset.type;
+            
+            // Hide all datasets
+            applianceComparisonChart.data.datasets.forEach(dataset => {
+              dataset.hidden = true;
+            });
+            
+            // Show only the selected dataset
+            if (chartType === "consumption") {
+              applianceComparisonChart.data.datasets[0].hidden = false;
+            } else if (chartType === "cost") {
+              applianceComparisonChart.data.datasets[1].hidden = false;
+            } else if (chartType === "usage") {
+              applianceComparisonChart.data.datasets[2].hidden = false;
+            }
+            
+            // Update the legend display
+            updateChartLegend(chartType);
+            
+            // Update the chart
+            applianceComparisonChart.update();
+          });
+        });
+        
+        // Initialize the legend display
+        updateChartLegend("consumption");
+        
         return {
           consumptionChart,
           costChart,
           categoryChart,
+          applianceComparisonChart
         };
       }
-
-      // Initialize charts when page loads
+      
+      // Helper function to update the chart legend display
+      function updateChartLegend(chartType) {
+        const legendItems = document.querySelectorAll(".chart-legend .legend-item");
+        legendItems.forEach(item => item.style.display = "none");
+        
+        if (chartType === "consumption") {
+          legendItems[0].style.display = "flex";
+        } else if (chartType === "cost") {
+          legendItems[1].style.display = "flex";
+        } else if (chartType === "usage") {
+          legendItems[2].style.display = "flex";
+        }
+      }
+        // Function to extract appliance data from the table
+      function getApplianceDataFromTable() {
+        console.log('Getting appliance data from table');
+        const labels = [];
+        const consumptionData = [];
+        const costData = [];
+        const usageData = [];
+        
+        const tableBody = document.querySelector(".appliance-table tbody");
+        if (!tableBody) {
+          console.error("Table body not found!");
+          return {
+            labels: ["No Data Available"],
+            consumptionData: [0],
+            costData: [0],
+            usageData: [0]
+          };
+        }
+        
+        const rows = tableBody.querySelectorAll("tr");
+        console.log(`Found ${rows.length} appliance rows`);        
+        if (rows.length === 0) {
+          console.log('No appliance rows found, using sample data');
+          return sampleApplianceData;
+        }
+        
+        rows.forEach((row, index) => {
+          try {
+            const applianceName = row.querySelector("td:nth-child(1)").textContent.trim();
+            const monthlyKwhText = row.querySelector("td:nth-child(5)").textContent.trim();
+            const monthlyKwh = parseFloat(monthlyKwhText);
+            const costText = row.querySelector("td:nth-child(6)").textContent.trim();
+            const cost = parseFloat(costText.replace('₱', '').replace(/,/g, ''));
+            const usageText = row.querySelector("td:nth-child(4)").textContent.trim();
+            const usage = parseFloat(usageText);
+            
+            // Only include active appliances
+            const status = row.querySelector("td:nth-child(7)").textContent.trim();
+            if (status.includes("Active")) {
+              labels.push(applianceName);
+              consumptionData.push(isNaN(monthlyKwh) ? 0 : monthlyKwh);
+              costData.push(isNaN(cost) ? 0 : cost);
+              usageData.push(isNaN(usage) ? 0 : usage);
+            }
+          } catch (error) {
+            console.error(`Error processing row ${index}:`, error);          }
+        });
+        
+        // If no active appliances were found, use sample data
+        if (labels.length === 0) {
+          console.log('No active appliances found, using sample data');
+          return sampleApplianceData;
+        }
+        
+        console.log('Returning appliance data:', { labels, consumptionData, costData, usageData });
+        return {
+          labels,
+          consumptionData,
+          costData,
+          usageData
+        };
+      }      // Initialize charts when page loads
       let charts;
-      window.addEventListener("DOMContentLoaded", function () {
+      
+      // Sample data to use if table data isn't available
+      const sampleApplianceData = {
+        labels: ["Air Conditioner", "Refrigerator", "LED TV", "Ceiling Fan", "LED Lights", "Laptop"],
+        consumptionData: [228.0, 108.0, 15.3, 19.5, 7.2, 9.0],
+        costData: [2052.0, 972.0, 137.70, 175.50, 64.80, 81.0],
+        usageData: [8, 24, 6, 10, 6, 5]
+      };
+      
+      // Function to display fallback information when charts fail to load
+      function displayFallbackInfo() {
+        const chartContainers = document.querySelectorAll('.chart-container');
+        chartContainers.forEach(container => {
+          // Check if container already has an error message
+          if (container.querySelector('.chart-error') || container.querySelector('canvas')) {
+            return;
+          }
+          
+          // Create and display static information
+          const fallbackInfo = document.createElement('div');
+          fallbackInfo.className = 'chart-fallback';
+          fallbackInfo.innerHTML = `
+            <div class="fallback-header">
+              <i class="fas fa-chart-simple"></i> 
+              <span>Chart Data Available</span>
+            </div>
+            <div class="fallback-content">
+              <p>Visual representation currently unavailable.</p>
+              <p>Total Consumption: 357 kWh</p>
+              <p>Estimated Cost: ₱3,213.00</p>
+              <button class="btn btn-primary reload-charts-btn">
+                <i class="fas fa-sync"></i> Reload Charts
+              </button>
+            </div>
+          `;
+          
+          container.appendChild(fallbackInfo);
+        });
+        
+        // Add event listener to reload buttons
+        document.querySelectorAll('.reload-charts-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            // Remove fallback displays
+            document.querySelectorAll('.chart-fallback').forEach(el => el.remove());
+            
+            // Try to initialize charts again
+            ensureChartJsLoaded(function() {
+              try {
+                charts = initCharts();
+                console.log('Charts reinitialized successfully');
+              } catch (error) {
+                console.error('Error reinitializing charts:', error);
+              }
+            });
+          });
+        });
+        
+        // Add styles for fallback display
+        const fallbackStyles = document.createElement('style');
+        fallbackStyles.textContent = `
+          .chart-fallback {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            background-color: rgba(248, 249, 250, 0.8);
+            border-radius: 8px;
+            gap: 15px;
+          }
+          .fallback-header {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .fallback-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+          }
+          .fallback-content p {
+            margin: 0;
+          }
+        `;
+        document.head.appendChild(fallbackStyles);
+      }
+        // Make sure Chart.js is loaded correctly
+      function ensureChartJsLoaded(callback) {
+        if (window.Chart) {
+          console.log('Chart.js is loaded');
+          callback();
+          return;
+        } 
+        
+        console.error('Chart.js is not loaded! Attempting to load it now...');
+        
+        // Try multiple CDNs for better reliability
+        const cdnUrls = [
+          'https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js',
+          'https://unpkg.com/chart.js@3.9.1/dist/chart.min.js'
+        ];
+        
+        // Show loading indicator in chart containers
+        const chartContainers = document.querySelectorAll('.chart-container');
+        chartContainers.forEach(container => {
+          const loadingIndicator = document.createElement('div');
+          loadingIndicator.className = 'chart-loading';
+          loadingIndicator.innerHTML = `
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading Charts...</div>
+          `;
+          container.appendChild(loadingIndicator);
+        });
+        
+        // Add loading spinner styles
+        const spinnerStyles = document.createElement('style');
+        spinnerStyles.textContent = `
+          .chart-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+          }
+          .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+          }
+          .loading-text {
+            color: var(--primary-color);
+            font-weight: 500;
+          }
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `;
+        document.head.appendChild(spinnerStyles);
+        
+        // Try each CDN until one works
+        function tryLoadFromCDN(index) {
+          if (index >= cdnUrls.length) {
+            console.error('All CDNs failed to load Chart.js');
+            
+            // Remove loading indicators
+            document.querySelectorAll('.chart-loading').forEach(el => el.remove());
+            
+            // Display fallback information
+            displayFallbackInfo();
+            return;
+          }
+          
+          const chartScript = document.createElement('script');
+          chartScript.src = cdnUrls[index];
+          chartScript.onload = function() {
+            console.log('Chart.js loaded dynamically from ' + cdnUrls[index]);
+            
+            // Remove loading indicators
+            document.querySelectorAll('.chart-loading').forEach(el => el.remove());
+            
+            callback();
+          };
+          chartScript.onerror = function() {
+            console.error('Failed to load Chart.js from ' + cdnUrls[index]);
+            // Try next CDN
+            tryLoadFromCDN(index + 1);
+          };
+          document.head.appendChild(chartScript);
+        }
+        
+        // Start trying from the first CDN
+        tryLoadFromCDN(0);
+      }window.addEventListener("DOMContentLoaded", function () {
+        console.log('DOMContentLoaded event fired');
         updateTotals();
-        charts = initCharts();
+        
+        // Check if all canvas elements exist
+        const canvasIds = ["consumptionChart", "costChart", "categoryPieChart", "applianceComparisonChart"];
+        let allCanvasExist = true;
+        
+        canvasIds.forEach(id => {
+          const canvas = document.getElementById(id);
+          if (!canvas) {
+            console.error(`Canvas element with id ${id} not found!`);
+            allCanvasExist = false;
+          } else {
+            console.log(`Canvas element ${id} found`);
+          }
+        });
+        
+        if (!allCanvasExist) {
+          console.warn('Not all canvas elements were found. Some charts may not display properly.');
+        }
+        
+        // Ensure Chart.js is loaded before initializing charts
+        ensureChartJsLoaded(function() {
+          try {
+            charts = initCharts();
+            console.log('Charts initialized successfully:', charts);
+          } catch (error) {
+            console.error('Error initializing charts:', error);
+            // Display error message for users
+            canvasIds.forEach(id => {
+              const canvas = document.getElementById(id);
+              if (canvas) {
+                const container = canvas.parentElement;
+                if (container) {
+                  const errorMsg = document.createElement('div');
+                  errorMsg.className = 'chart-error';
+                  errorMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Unable to display chart. Please refresh the page.';
+                  errorMsg.style.cssText = 'color: #e63946; padding: 20px; text-align: center; font-weight: bold;';
+                  container.appendChild(errorMsg);
+                }
+              }
+            });
+          }
+        });
 
         // Update pie chart when appliances change
         const observer = new MutationObserver(function (mutations) {
@@ -1446,58 +2127,249 @@
           childList: true,
           subtree: true,
         });
-      });
-
-      // Update the pie chart based on current appliance data
+      });      // Update the pie chart based on current appliance data
       function updateCategoryChart() {
-        if (!charts || !charts.categoryChart) return;
+        try {
+          if (!charts || !charts.categoryChart) {
+            console.error('Category chart not initialized');
+            return;
+          }
+          
+          console.log('Updating category chart...');
 
-        let climate = 0,
-          kitchen = 0,
-          entertainment = 0,
-          lighting = 0,
-          other = 0;
+          let climate = 0,
+            kitchen = 0,
+            entertainment = 0,
+            lighting = 0,
+            other = 0;
+            
+          try {
+            document
+              .querySelectorAll(".appliance-table tbody tr")
+              .forEach((row) => {
+                // Make sure row has all cells we need
+                if (row.cells.length < 7) {
+                  console.warn('Invalid table row structure, missing cells');
+                  return;
+                }
+                
+                // Get status
+                const statusCell = row.querySelector("td:nth-child(7)");
+                if (!statusCell) {
+                  console.warn('Status cell not found in row');
+                  return;
+                }
+                
+                const status = statusCell.textContent.trim();
+                if (!status.includes("Active")) return;
 
-        document
-          .querySelectorAll(".appliance-table tbody tr")
-          .forEach((row) => {
-            const status = row
-              .querySelector("td:nth-child(7)")
-              .textContent.trim();
-            if (!status.includes("Active")) return;
+                // Get monthly kWh
+                const kwhCell = row.querySelector("td:nth-child(5)");
+                if (!kwhCell) {
+                  console.warn('kWh cell not found in row');
+                  return;
+                }
+                
+                const monthlyKwh = parseFloat(kwhCell.textContent);
+                if (isNaN(monthlyKwh)) {
+                  console.warn('Invalid kWh value:', kwhCell.textContent);
+                  return;
+                }
+                
+                // Get category
+                const categoryCell = row.querySelector("td:nth-child(2)");
+                if (!categoryCell) {
+                  console.warn('Category cell not found in row');
+                  return;
+                }
+                
+                const category = categoryCell.textContent.trim().toLowerCase();
 
-            const monthlyKwh = parseFloat(
-              row.querySelector("td:nth-child(5)").textContent
-            );
-            const category = row
-              .querySelector("td:nth-child(2)")
-              .textContent.trim()
-              .toLowerCase();
+                if (category.includes("climate")) {
+                  climate += monthlyKwh;
+                } else if (category.includes("kitchen")) {
+                  kitchen += monthlyKwh;
+                } else if (category.includes("entertainment")) {
+                  entertainment += monthlyKwh;
+                } else if (category.includes("lighting")) {
+                  lighting += monthlyKwh;
+                } else {
+                  other += monthlyKwh;
+                }
+              });
+          } catch (error) {
+            console.error('Error processing table rows:', error);
+            // Use default values if there's an error
+            climate = 247.5;
+            kitchen = 129.0;
+            entertainment = 36.3;
+            lighting = 7.2;
+            other = 0;
+          }
 
-            if (category.includes("climate")) {
-              climate += monthlyKwh;
-            } else if (category.includes("kitchen")) {
-              kitchen += monthlyKwh;
-            } else if (category.includes("entertainment")) {
-              entertainment += monthlyKwh;
-            } else if (category.includes("lighting")) {
-              lighting += monthlyKwh;
-            } else {
-              other += monthlyKwh;
+          // Update chart data
+          charts.categoryChart.data.datasets[0].data = [
+            climate,
+            kitchen,
+            entertainment,
+            lighting,
+            other,
+          ];
+          
+          // Update the title to include total
+          const totalKwh = climate + kitchen + entertainment + lighting + other;
+          charts.categoryChart.options.plugins.title.text = 
+            `Consumption by Category (Total: ${totalKwh.toFixed(1)} kWh)`;
+          
+          // Update saving opportunities based on new data
+          updateSavingOpportunities(climate, kitchen, lighting, totalKwh);
+          
+          // Update the chart
+          charts.categoryChart.update();
+          console.log('Category chart updated successfully');
+          
+          // Also update the appliance comparison chart
+          updateApplianceComparisonChart();
+        } catch (error) {
+          console.error('Error updating category chart:', error);
+          
+          // Attempt to recover by recreating the chart
+          try {
+            const categoryCanvas = document.getElementById("categoryPieChart");
+            if (categoryCanvas && charts) {
+              charts.categoryChart.destroy();
+              const categoryCtx = categoryCanvas.getContext("2d");
+              
+              // Create category pie chart with default data
+              charts.categoryChart = new Chart(categoryCtx, {
+                type: "doughnut",
+                data: {
+                  labels: [
+                    "Climate Control",
+                    "Kitchen",
+                    "Entertainment",
+                    "Lighting",
+                    "Other",
+                  ],
+                  datasets: [
+                    {
+                      data: [247.5, 129.0, 36.3, 7.2, 0],
+                      backgroundColor: [
+                        "#e76f51", // Climate
+                        "#2a9d8f", // Kitchen
+                        "#457b9d", // Entertainment
+                        "#ee9b00", // Lighting
+                        "#6c757d", // Other
+                      ],
+                      borderColor: "white",
+                      borderWidth: 2,
+                      hoverOffset: 10,
+                    },
+                  ],
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  cutout: '65%',
+                  plugins: {
+                    title: {
+                      display: true,
+                      text: "Consumption by Category (kWh)",
+                      font: {
+                        size: 14,
+                        weight: 'bold'
+                      }
+                    },
+                    legend: {
+                      position: "bottom",
+                      labels: {
+                        padding: 15,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                      }
+                    }
+                  },
+                },
+              });
+              
+              console.log('Category chart recreated');
             }
-          });
-
-        // Update chart data
-        charts.categoryChart.data.datasets[0].data = [
-          climate,
-          kitchen,
-          entertainment,
-          lighting,
-          other,
-        ];
-        charts.categoryChart.update();
+          } catch (recoveryError) {
+            console.error('Failed to recover category chart:', recoveryError);
+          }
+        }
       }
-      // Calculate total consumption and cost
+        // Update the appliance comparison chart when data changes
+      function updateApplianceComparisonChart() {
+        try {
+          if (!charts || !charts.applianceComparisonChart) {
+            console.error('Appliance comparison chart not initialized');
+            return;
+          }
+          
+          console.log('Updating appliance comparison chart...');
+          
+          // Get updated appliance data
+          const applianceData = getApplianceDataFromTable();
+          
+          // Update chart data
+          charts.applianceComparisonChart.data.labels = applianceData.labels;
+          charts.applianceComparisonChart.data.datasets[0].data = applianceData.consumptionData;
+          charts.applianceComparisonChart.data.datasets[1].data = applianceData.costData;
+          charts.applianceComparisonChart.data.datasets[2].data = applianceData.usageData;
+          
+          // Update the chart
+          charts.applianceComparisonChart.update();
+          
+          console.log('Appliance comparison chart updated successfully');
+          
+          // Show update notification if not initial load
+          if (window.chartUpdateNotification) {
+            // Create toast notification
+            const toastMessage = document.createElement("div");
+            toastMessage.className = "toast-message success";
+            toastMessage.innerHTML = '<i class="fas fa-chart-bar"></i> Charts updated with new data';
+            document.body.appendChild(toastMessage);
+            
+            // Remove toast after 2 seconds
+            setTimeout(() => {
+              toastMessage.style.opacity = "0";
+              setTimeout(() => toastMessage.remove(), 500);
+            }, 2000);
+          } else {
+            // Set flag for future updates
+            window.chartUpdateNotification = true;
+          }
+        } catch (error) {
+          console.error('Error updating appliance comparison chart:', error);
+        }
+      }
+      
+      // Update the saving opportunities based on consumption data
+      function updateSavingOpportunities(climate, kitchen, lighting, totalKwh) {
+        // Climate control savings - based on reducing usage by 1hr/day
+        if (climate > 0) {
+          const acUsage = climate * 0.8; // Assume 80% of climate is AC
+          const acHourly = acUsage / 30 / 8; // Estimated hourly consumption
+          const climateSavings = Math.round(acHourly * 30 * 9); // 1hr/day * 30 days * ₱9 rate
+          document.querySelector(".saving-item:nth-child(1) .saving-value").textContent =
+            "₱" + climateSavings + "/month";
+        }
+        
+        // Kitchen appliance savings - based on efficient settings (about 10%)
+        if (kitchen > 0) {
+          const kitchenSavings = Math.round(kitchen * 0.1 * 9); // 10% savings * ₱9 rate
+          document.querySelector(".saving-item:nth-child(2) .saving-value").textContent =
+            "₱" + kitchenSavings + "/month";
+        }
+        
+        // Lighting savings - based on LED upgrade (about 70%)
+        if (lighting > 0) {
+          const lightingSavings = Math.round(lighting * 0.7 * 9); // 70% savings * ₱9 rate
+          document.querySelector(".saving-item:nth-child(3) .saving-value").textContent =
+            "₱" + lightingSavings + "/month";
+        }
+      }// Calculate total consumption and cost
       function updateTotals() {
         let totalKwh = 0;
         let totalCost = 0;
@@ -1527,12 +2399,20 @@
           });
 
         // Update the stats display
-        document.querySelector(".stat-info:nth-child(2) p").textContent =
+        document.querySelector(".summary-stats .stat-card:nth-child(1) .stat-info p").textContent =
           activeAppliances.length.toString();
-        document.querySelector(".stat-info:nth-child(1) p").textContent =
+        document.querySelector(".summary-stats .stat-card:nth-child(2) .stat-info p").textContent =
           Math.round(totalKwh) + " kWh";
-        document.querySelector(".stat-info:nth-child(3) p").textContent =
-          "₱" + totalCost.toFixed(2);
+        document.querySelector(".summary-stats .stat-card:nth-child(3) .stat-info p").textContent =
+          "₱" + totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+        // Also update saving opportunities
+        const climatePercentage = Math.round((247.5 / totalKwh) * 100);
+        if (climatePercentage > 30) {
+          const climateSavings = Math.round(totalCost * 0.15);
+          document.querySelector(".saving-item:nth-child(1) .saving-value").textContent =
+            "₱" + climateSavings.toLocaleString('en-US') + "/month";
+        }
 
         return {
           totalKwh,
@@ -1578,16 +2458,23 @@
       const modal = document.getElementById("editModal");
       const editButtons = document.querySelectorAll(".edit-btn");
       const closeBtn = document.querySelector(".close");
-      const cancelBtn = document.getElementById("cancelEdit");
-
-      // Open modal when edit button is clicked
+      const cancelBtn = document.getElementById("cancelEdit");      // Open modal when edit button is clicked
       editButtons.forEach((button) => {
         button.addEventListener("click", function () {
+          // First remove the data-editing attribute from all buttons
+          document.querySelectorAll(".edit-btn").forEach(btn => {
+            btn.removeAttribute("data-editing");
+          });
+          
+          // Mark this button as the one being used for editing
+          this.setAttribute("data-editing", "true");
+          
+          // Display the modal
           modal.style.display = "block";
 
           const row = this.closest("tr");
           document.getElementById("editApplianceName").value =
-            row.cells[0].textContent;
+            row.cells[0].textContent.trim();
 
           const categoryText = row.cells[1].textContent.trim();
           const categorySelect = document.getElementById(
@@ -1607,9 +2494,9 @@
           }
 
           document.getElementById("editAppliancePower").value =
-            row.cells[2].textContent;
+            row.cells[2].textContent.trim();
           document.getElementById("editDailyUsage").value =
-            row.cells[3].textContent;
+            row.cells[3].textContent.trim();
           document.getElementById("editApplianceStatus").value =
             row.cells[6].textContent.trim().toLowerCase().includes("active")
               ? "active"
@@ -1633,149 +2520,287 @@
         }
       });
 
-      // Delete button handling
-      document.querySelectorAll(".delete-btn").forEach((button) => {
+      // Delete button handling     
+       document.querySelectorAll(".delete-btn").forEach((button) => {
         button.addEventListener("click", function () {
           if (confirm("Are you sure you want to delete this appliance?")) {
             this.closest("tr").remove();
             updateTotals();
-            alert("Appliance deleted successfully!");
+            updateCategoryChart();
+            updateApplianceComparisonChart();
+            
+            // Show toast notification instead of alert
+            const toastMessage = document.createElement("div");
+            toastMessage.className = "toast-message success";
+            toastMessage.innerHTML = `<i class="fas fa-check-circle"></i> Appliance deleted successfully!`;
+            document.body.appendChild(toastMessage);
+            
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+              toastMessage.style.opacity = "0";
+              setTimeout(() => toastMessage.remove(), 500);
+            }, 3000);
           }
         });
-      });
-
-      // Form submission
+      });// Form submission
       document
         .getElementById("applianceForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
 
-          // Get form values
-          const name = document.getElementById("applianceName").value;
-          const category = document.getElementById("applianceCategory").value;
-          const power = document.getElementById("appliancePower").value;
-          const usage = document.getElementById("dailyUsage").value;
-          const status = document.getElementById("applianceStatus").value;
+          try {
+            // Get form values
+            const name = document.getElementById("applianceName").value.trim();
+            const category = document.getElementById("applianceCategory").value;
+            const power = parseFloat(document.getElementById("appliancePower").value);
+            const usage = parseFloat(document.getElementById("dailyUsage").value);
+            const status = document.getElementById("applianceStatus").value;
 
-          // Calculate monthly kWh and cost
-          const monthlyKwh = ((power * usage * 30) / 1000).toFixed(1);
-          const monthlyCost = (monthlyKwh * 9).toFixed(2); // Using ₱9 per kWh rate
-
-          // Create new row for the table
-          const tbody = document.querySelector(".appliance-table tbody");
-          const newRow = tbody.insertRow(0); // Insert at the top
-
-          // Insert cells with data
-          newRow.innerHTML = `
-            <td>${name}</td>
-            <td><span class="appliance-category category-${category}">${getCategoryName(
-            category
-          )}</span></td>
-            <td>${power}</td>
-            <td>${usage}</td>
-            <td>${monthlyKwh}</td>
-            <td>${monthlyCost}</td>
-            <td><span class="status-indicator status-${status}"></span> ${
-            status === "active" ? "Active" : "Inactive"
-          }</td>
-            <td>
-              <div class="actions">
-                <button class="action-btn edit-btn" title="Edit">
-                  <i class="fas fa-pen"></i>
-                </button>
-                <button class="action-btn delete-btn" title="Delete">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </td>
-          `;
-
-          // Add event listeners to new buttons
-          const newEditBtn = newRow.querySelector(".edit-btn");
-          const newDeleteBtn = newRow.querySelector(".delete-btn");
-
-          newEditBtn.addEventListener("click", function () {
-            modal.style.display = "block";
-            // Populate form with row data
-            document.getElementById("editApplianceName").value = name;
-            document.getElementById("editApplianceCategory").value = category;
-            document.getElementById("editAppliancePower").value = power;
-            document.getElementById("editDailyUsage").value = usage;
-            document.getElementById("editApplianceStatus").value = status;
-          });
-
-          newDeleteBtn.addEventListener("click", function () {
-            if (confirm("Are you sure you want to delete this appliance?")) {
-              newRow.remove();
-              updateTotals();
-              alert("Appliance deleted successfully!");
+            // Form validation
+            if (!name) {
+              throw new Error("Please enter an appliance name");
             }
-          });
+            if (!category) {
+              throw new Error("Please select a category");
+            }
+            if (isNaN(power) || power <= 0) {
+              throw new Error("Please enter a valid power value greater than 0");
+            }
+            if (isNaN(usage) || usage <= 0 || usage > 24) {
+              throw new Error("Please enter a valid usage value between 0 and 24 hours");
+            }
 
-          // Reset form
-          this.reset();
+            // Calculate monthly kWh and cost
+            const monthlyKwh = ((power * usage * 30) / 1000).toFixed(1);
+            const monthlyCost = (monthlyKwh * 9).toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            }); // Using ₱9 per kWh rate
 
-          // Update totals
-          updateTotals();
+            // Create new row for the table
+            const tbody = document.querySelector(".appliance-table tbody");
+            const newRow = tbody.insertRow(0); // Insert at the top
 
-          // Show success message
-          alert("Appliance added successfully!");
-        });
+            // Insert cells with data
+            newRow.innerHTML = `
+              <td>${name}</td>
+              <td><span class="appliance-category category-${category}">${getCategoryName(
+              category
+            )}</span></td>
+              <td>${power}</td>
+              <td>${usage}</td>
+              <td>${monthlyKwh}</td>
+              <td>${monthlyCost}</td>
+              <td><span class="status-indicator status-${status}"></span> ${
+              status === "active" ? "Active" : "Inactive"
+            }</td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            `;
 
-      // Edit form submission
+            // Add event listeners to new buttons
+            const newEditBtn = newRow.querySelector(".edit-btn");
+            const newDeleteBtn = newRow.querySelector(".delete-btn");
+
+            newEditBtn.addEventListener("click", function () {
+              modal.style.display = "block";
+              // Populate form with row data
+              document.getElementById("editApplianceName").value = name;
+              document.getElementById("editApplianceCategory").value = category;
+              document.getElementById("editAppliancePower").value = power;
+              document.getElementById("editDailyUsage").value = usage;
+              document.getElementById("editApplianceStatus").value = status;
+            });            newDeleteBtn.addEventListener("click", function () {
+              if (confirm("Are you sure you want to delete this appliance?")) {
+                newRow.remove();
+                updateTotals();
+                updateCategoryChart();
+                updateApplianceComparisonChart();
+                
+                // Show toast notification instead of alert
+                const toastMessage = document.createElement("div");
+                toastMessage.className = "toast-message success";
+                toastMessage.innerHTML = `<i class="fas fa-check-circle"></i> Appliance deleted successfully!`;
+                document.body.appendChild(toastMessage);
+                
+                // Remove toast after 3 seconds
+                setTimeout(() => {
+                  toastMessage.style.opacity = "0";
+                  setTimeout(() => toastMessage.remove(), 500);
+                }, 3000);
+              }
+            });            // Reset form
+            this.reset();
+
+            // Update totals and charts
+            updateTotals();
+            updateCategoryChart();
+            updateApplianceComparisonChart();
+
+            // Show success message with toast notification
+            const toastMessage = document.createElement("div");
+            toastMessage.className = "toast-message success";
+            toastMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${name} added successfully!`;
+            document.body.appendChild(toastMessage);
+            
+            // Add toast styles if they don't exist
+            if (!document.getElementById("toast-styles")) {
+              const toastStyles = document.createElement("style");
+              toastStyles.id = "toast-styles";
+              toastStyles.textContent = `
+                .toast-message {
+                  position: fixed;
+                  bottom: 20px;
+                  right: 20px;
+                  padding: 12px 20px;
+                  border-radius: 6px;
+                  color: white;
+                  font-weight: 500;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+                  z-index: 9999;
+                  transition: opacity 0.5s;
+                }
+                .toast-message.success {
+                  background-color: var(--success-color);
+                }
+                .toast-message.error {
+                  background-color: var(--danger-color);
+                }
+                .toast-message i {
+                  font-size: 1.2rem;
+                }
+              `;
+              document.head.appendChild(toastStyles);
+            }
+            
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+              toastMessage.style.opacity = "0";
+              setTimeout(() => toastMessage.remove(), 500);
+            }, 3000);
+            
+          } catch (error) {
+            // Show error toast notification
+            const errorToast = document.createElement("div");
+            errorToast.className = "toast-message error";
+            errorToast.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${error.message}`;
+            document.body.appendChild(errorToast);
+            
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+              errorToast.style.opacity = "0";
+              setTimeout(() => errorToast.remove(), 500);
+            }, 3000);
+          }
+        });      // Edit form submission
       document
         .getElementById("editApplianceForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
 
-          // Get the edited values
-          const name = document.getElementById("editApplianceName").value;
-          const category = document.getElementById(
-            "editApplianceCategory"
-          ).value;
-          const power = document.getElementById("editAppliancePower").value;
-          const usage = document.getElementById("editDailyUsage").value;
-          const status = document.getElementById("editApplianceStatus").value;
+          try {
+            // Get the edited values
+            const name = document.getElementById("editApplianceName").value.trim();
+            const category = document.getElementById("editApplianceCategory").value;
+            const power = parseFloat(document.getElementById("editAppliancePower").value);
+            const usage = parseFloat(document.getElementById("editDailyUsage").value);
+            const status = document.getElementById("editApplianceStatus").value;
 
-          // Calculate monthly kWh and cost
-          const monthlyKwh = ((power * usage * 30) / 1000).toFixed(1);
-          const monthlyCost = (monthlyKwh * 9).toFixed(2); // Using ₱9 per kWh rate
-
-          // Find the row being edited (the last one clicked)
-          const editButtons = document.querySelectorAll(".edit-btn");
-          let rowToEdit;
-
-          editButtons.forEach((btn) => {
-            if (getComputedStyle(modal).display === "block") {
-              if (
-                btn === document.activeElement ||
-                btn === document.querySelector(":focus")
-              ) {
-                rowToEdit = btn.closest("tr");
-              }
+            // Form validation
+            if (!name) {
+              throw new Error("Please enter an appliance name");
             }
-          });
+            if (!category) {
+              throw new Error("Please select a category");
+            }
+            if (isNaN(power) || power <= 0) {
+              throw new Error("Please enter a valid power value greater than 0");
+            }
+            if (isNaN(usage) || usage <= 0 || usage > 24) {
+              throw new Error("Please enter a valid usage value between 0 and 24 hours");
+            }
 
-          if (rowToEdit) {
-            // Update the row with new values
-            rowToEdit.cells[0].textContent = name;
-            rowToEdit.cells[1].innerHTML = `<span class="appliance-category category-${category}">${getCategoryName(
-              category
-            )}</span>`;
-            rowToEdit.cells[2].textContent = power;
-            rowToEdit.cells[3].textContent = usage;
-            rowToEdit.cells[4].textContent = monthlyKwh;
-            rowToEdit.cells[5].textContent = monthlyCost;
-            rowToEdit.cells[6].innerHTML = `<span class="status-indicator status-${status}"></span> ${
-              status === "active" ? "Active" : "Inactive"
-            }`;
+            // Calculate monthly kWh and cost
+            const monthlyKwh = ((power * usage * 30) / 1000).toFixed(1);
+            const monthlyCost = (monthlyKwh * 9).toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            }); // Using ₱9 per kWh rate
 
-            // Update totals
-            updateTotals();
+            // Store the current active button
+            let currentEditButton = null;
+            document.querySelectorAll(".edit-btn").forEach(btn => {
+              if (btn.getAttribute("data-editing") === "true") {
+                currentEditButton = btn;
+              }
+            });
+
+            // Find the row being edited
+            const rowToEdit = currentEditButton ? currentEditButton.closest("tr") : null;
+
+            if (rowToEdit) {
+              // Update the row with new values
+              rowToEdit.cells[0].textContent = name;
+              rowToEdit.cells[1].innerHTML = `<span class="appliance-category category-${category}">${getCategoryName(
+                category
+              )}</span>`;
+              rowToEdit.cells[2].textContent = power;
+              rowToEdit.cells[3].textContent = usage;
+              rowToEdit.cells[4].textContent = monthlyKwh;
+              rowToEdit.cells[5].textContent = monthlyCost;
+              rowToEdit.cells[6].innerHTML = `<span class="status-indicator status-${status}"></span> ${
+                status === "active" ? "Active" : "Inactive"
+              }`;              // Update totals and charts
+              updateTotals();
+              updateCategoryChart();
+              updateApplianceComparisonChart();
+              
+              // Clear data-editing attribute
+              if (currentEditButton) {
+                currentEditButton.removeAttribute("data-editing");
+              }
+              
+              // Show success toast notification
+              const toastMessage = document.createElement("div");
+              toastMessage.className = "toast-message success";
+              toastMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${name} updated successfully!`;
+              document.body.appendChild(toastMessage);
+              
+              // Remove toast after 3 seconds
+              setTimeout(() => {
+                toastMessage.style.opacity = "0";
+                setTimeout(() => toastMessage.remove(), 500);
+              }, 3000);
+              
+              // Close the modal
+              modal.style.display = "none";
+            } else {
+              throw new Error("Could not find the appliance to edit");
+            }
+          } catch (error) {
+            // Show error toast notification
+            const errorToast = document.createElement("div");
+            errorToast.className = "toast-message error";
+            errorToast.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${error.message}`;
+            document.body.appendChild(errorToast);
+            
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+              errorToast.style.opacity = "0";
+              setTimeout(() => errorToast.remove(), 500);
+            }, 3000);
           }
-
-          alert("Changes saved successfully!");
-          modal.style.display = "none";
         });
 
       // Helper function to get category name
@@ -1792,7 +2817,47 @@
           default:
             return "Other";
         }
-      }
+      }    </script>
+    
+    <!-- Additional script to ensure charts are loaded correctly -->
+    <script>
+      // Extra check to make sure charts are initialized after a short delay
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          console.log('Final chart check...');
+          if (!charts || !charts.consumptionChart || !charts.applianceComparisonChart) {
+            console.log('Charts not initialized properly, retrying...');
+            try {
+              ensureChartJsLoaded(function() {
+                charts = initCharts();
+                console.log('Charts re-initialized on second attempt');
+              });
+            } catch(e) {
+              console.error('Failed to initialize charts on second attempt:', e);
+              
+              // Show error messages in chart containers
+              const canvasIds = ["consumptionChart", "costChart", "categoryPieChart", "applianceComparisonChart"];
+              canvasIds.forEach(id => {
+                const canvas = document.getElementById(id);
+                if (canvas) {
+                  const container = canvas.parentElement;
+                  if (container) {
+                    // Check if error message already exists
+                    if (!container.querySelector('.chart-error')) {
+                      const errorMsg = document.createElement('div');
+                      errorMsg.className = 'chart-error';
+                      errorMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Unable to display chart. Please refresh the page.';
+                      container.appendChild(errorMsg);
+                    }
+                  }
+                }
+              });
+            }
+          } else {
+            console.log('Charts are properly initialized');
+          }
+        }, 1000); // Wait 1 second after page load
+      });
     </script>
   </body>
 </html>
